@@ -19,7 +19,7 @@
             "title": "中国农业大学 (985)",
             "subtitle": "计算机技术 (硕士)",
             "date": "2024-09 ~ 至今",
-            "description": "主修课程：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。"
+            "description": "**硕士课程：** 深度学习、计算机视觉、机器学习、数据挖掘、模式识别。\n**本科课程：** Python、算法设计、数据结构、软件工程、数据库原理、操作系统、编译原理。"
           },
           {
             "id": "edu2",
@@ -43,8 +43,13 @@
             "date_end": "至今",
             "location": null,
             "highlights": [
-              "车辆电控配置excel表问答助手(独立负责)\n项目目标：解决算法部门在进行多表检索难的问题\n- 设计并实现“自然语言→SQL→只读结果”的问答服务，Excel 数据拆解落库至 SQLite，结构化返回结论与结果集，满足≤60s 响应 SLA。\n- 设计三类 Chroma 知识库 (DDL/Q→SQL/数据库描述)，提升SQL 生成的相关性\n- 设计 SQL Agent，采用React范式设计，设计了SQL错误自纠正，保证SQL生成的稳定性\n- 接口使用 FastAPI 进行封装，便于运维团队处理。\n- 通过环境变量抽象 LLM（OpenAI 兼容）与库路径，支持跨环境快速切换与配置管理，保障工程落地与维护效率。",
-              "自动化测试用例助手 (独立负责)\n项目目标：应用工作流解决 QA 团队痛点，即根据PRD人工编写测试用例耗时长且MC/DC覆盖率难以保证的问题。\n解决策略\n1、通过任务拆解（Task Decomposition）和思维链（CoT）引导，提升输出质量；\n2、结果强制按JSON Schema输出，保证输出稳定性，提升下一步大模型的理解能力；\n3、领域知识注入，注入等价类划分、边界值分析 (BVA) 和 MC/DC（修正条件/判定覆盖）等专业测试方法论的定义、流程与约束，确保每个独立条件都对总体判定结果的影响都被独立验证；\n4、引入人在环中，便于测试人员编辑确认生成脑图；\n5、xml结构化提示词，便于大模型理解。\n结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作，配套的测试脑图能直观展现测试逻辑，方便测试人员核验 MC/DC 覆盖率的完整性。"
+              "**设计并实现了一套基于大模型的自动化测试用例生成工作流**，旨在解决QA团队手工编写用例耗时且MC/DC覆盖率难以保证的痛点。独立负责从需求分析到Demo交付的全过程。",
+              "**工作流核心设计**：将流程划分为需求澄清、分解、精化、最小测试集生成、脑图生成、用户确认及最终用例表生成七个阶段，通过思维链（CoT）引导大模型逐步完成复杂任务。",
+              "**关键技术实现**：",
+              "**提示词工程**：在提示词中结构化注入等价类划分、边界值分析及MC/DC覆盖准则的定义与规则，使大模型具备专业测试知识。",
+              "**输出稳定性保障**：采用“LLM生成JSON Schema草案+人工校验”的方式定义数据结构，并利用OpenAI API的`response_format`参数强制模型输出规范JSON，确保了下游处理的可靠性。",
+              "**人机交互设计**：在流程中引入“人在环路”环节，允许测试人员在自动生成的测试脑图上进行直观的编辑和确认，保证了结果的实用性和准确性。",
+              "**项目成果**：成功交付稳定Demo，其输出的结构化测试用例表显著降低了QA团队手工编写的繁琐度，配套的测试脑图能清晰展现测试逻辑与覆盖路径，有效辅助了MC/DC覆盖率的核验。"
             ]
           }
         ]
@@ -69,85 +74,64 @@
         "type": "generic",
         "items": [
           {
-            "id": "skill1",
-            "title": "熟悉agent和工作流框架",
-            "subtitle": null,
-            "date": null,
-            "description": "包括但不限于langgraph, langchain, llamalindex等"
-          },
-          {
-            "id": "skill2",
-            "title": "熟悉提示词工程",
-            "subtitle": null,
-            "date": null,
-            "description": "包括但不限于CoT，agent定义，Multi Step，xml结构化提示词，角色定义，JSON化结果等等"
-          },
-          {
-            "id": "skill3",
-            "title": "熟悉使用Rag",
-            "subtitle": null,
-            "date": null,
-            "description": "包括但不限于Advanced RAG（前后处理），Agentic RAG等等"
-          },
-          {
-            "id": "skill4",
-            "title": "有丰富的大型模型使用经验",
-            "subtitle": null,
-            "date": null,
-            "description": "包括但不限于Claude Haiku4.5，Sonnet 4，GPT 5，Gemini 2.5pro，GLM4.6，Deepseek v3.1，Kimi k2等等"
-          },
-          {
-            "id": "skill5",
-            "title": "熟悉python后端接口框架Fastapi",
+            "id": "b915992f-0746-4609-b999-0184c8c10ab3",
+            "title": "熟悉Agent与工作流框架（LangGraph、LangChain、LlamaIndex）",
             "subtitle": null,
             "date": null,
             "description": null
           },
           {
-            "id": "skill6",
-            "title": "熟悉工具封装和MCP",
-            "subtitle": null,
-            "date": null,
-            "description": "能指挥大模型进行封装"
-          },
-          {
-            "id": "skill7",
-            "title": "熟悉vibe coding",
-            "subtitle": null,
-            "date": null,
-            "description": "能指挥ai生成满足要求的前后端demo（如小程序）"
-          },
-          {
-            "id": "skill8",
-            "title": "熟悉python的面向对象设计",
-            "subtitle": null,
-            "date": null,
-            "description": "异常处理，异步编程等"
-          },
-          {
-            "id": "skill9",
-            "title": "熟悉数据结构和基础算法",
-            "subtitle": null,
-            "date": null,
-            "description": "包括但不限于哈希表，链表，队列，树，图，贪心，分治，动态规划等"
-          },
-          {
-            "id": "skill10",
-            "title": "熟悉源代码部署各种GitHub项目",
+            "id": "6199e40c-4686-45c3-9712-6ee1257ddc0d",
+            "title": "熟悉提示词工程（CoT、Agent定义、Multi-Step、XML/JSON结构化输出）",
             "subtitle": null,
             "date": null,
             "description": null
           },
           {
-            "id": "skill11",
-            "title": "熟悉linux操作环境",
+            "id": "33b325d1-1056-4e25-9deb-b0a00324dbc7",
+            "title": "熟悉RAG技术体系（Advanced RAG、Agentic RAG）",
             "subtitle": null,
             "date": null,
             "description": null
           },
           {
-            "id": "skill12",
-            "title": "了解LLM原理，NLP相关知识",
+            "id": "09d2fade-084b-4e76-bed1-b54bb255f97d",
+            "title": "熟悉主流大模型应用（Claude、GPT-5、Gemini、GLM、DeepSeek、Kimi）",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "8fb87aa9-19f5-4698-81db-f02ae7faf692",
+            "title": "熟悉Python后端开发（FastAPI框架、面向对象设计、异步编程）",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "09219cbf-7fee-4fe5-a76b-5494578da54e",
+            "title": "熟悉AI辅助开发与工具封装（能指挥大模型生成前后端Demo）",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "63e329d2-fa0e-47dc-98d5-379b7721b2e2",
+            "title": "掌握数据结构和基础算法（哈希表、链表、树、图、动态规划等）",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "53e7737e-980e-4e36-bcda-3d279ae40980",
+            "title": "熟悉Linux操作环境及软件部署",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "39894acf-397d-4f5f-9df5-23ef16342c7e",
+            "title": "了解LLM原理与NLP基础",
             "subtitle": null,
             "date": null,
             "description": null
@@ -210,7 +194,7 @@
     "tasks": [
       {
         "id": 1,
-        "status": "in_progress",
+        "status": "skipped",
         "section": "实习经历 - 大模型应用工程师",
         "strategy": "STAR_STORYTELLING",
         "original_text": "车辆电控配置excel表问答助手(独立负责)\n项目目标：解决算法部门在进行多表检索难的问题\n- 设计并实现“自然语言→SQL→只读结果”的问答服务，Excel 数据拆解落库至 SQLite，结构化返回结论与结果集，满足≤60s 响应 SLA。\n- 设计三类 Chroma 知识库 (DDL/Q→SQL/数据库描述)，提升SQL 生成的相关性\n- 设计 SQL Agent，采用React范式设计，设计了SQL错误自纠正，保证SQL生成的稳定性\n- 接口使用 FastAPI 进行封装，便于运维团队处理。\n- 通过环境变量抽象 LLM（OpenAI 兼容）与库路径，支持跨环境快速切换与配置管理，保障工程落地与维护效率。",
@@ -220,7 +204,7 @@
       },
       {
         "id": 2,
-        "status": "pending",
+        "status": "completed",
         "section": "实习经历 - 大模型应用工程师",
         "strategy": "STAR_STORYTELLING",
         "original_text": "自动化测试用例助手 (独立负责)\n项目目标：应用工作流解决 QA 团队痛点，即根据PRD人工编写测试用例耗时长且MC/DC覆盖率难以保证的问题。\n解决策略\n1、通过任务拆解（Task Decomposition）和思维链（CoT）引导，提升输出质量；\n2、结果强制按JSON Schema输出，保证输出稳定性，提升下一步大模型的理解能力；\n3、领域知识注入，注入等价类划分、边界值分析 (BVA) 和 MC/DC（修正条件/判定覆盖）等专业测试方法论的定义、流程与约束，确保每个独立条件都对总体判定结果的影响都被独立验证；\n4、引入人在环中，便于测试人员编辑确认生成脑图；\n5、xml结构化提示词，便于大模型理解。\n结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作，配套的测试脑图能直观展现测试逻辑，方便测试人员核验 MC/DC 覆盖率的完整性。",
@@ -230,7 +214,7 @@
       },
       {
         "id": 3,
-        "status": "pending",
+        "status": "skipped",
         "section": "项目经验 - DeepResearch Agent",
         "strategy": "STAR_STORYTELLING",
         "original_text": "项目目标：解决 Agent 在执行长周期、复杂研究任务时的核心痛点，即：1) 缺乏持久化规划导致“任务漂移”；2) 单一Agent 架构容易上下文膨胀。\n\n解决策略：\n1. 设计“先规划后执行”机制：通过自定义 State（包含 todo 列表）并结合“工具状态注入”（write/read_todo 工具），强制 Agent 在执行前进行任务分解，实现任务规划的持久化，提高LLM执行质量。\n2. 实现“上下文卸载”：设计 write_file 和 read_file 工具，允许 Agent 将长篇研究内容或历史记录卸载到状态（内存）中，仅在消息记录中保留文件名和结构化摘要，突破 LLM 上下文限制。\n3. 构建多 Agent 架构：引入 Task（任务分派）工具，主 Agent 通过调用该工具来委派子 Agent，子agent上下文与主agent隔离，解决单agent工作上下文膨胀的问题。\n4. 引入“强制思考”（Forced Thinking）：设计 think 工具，强制 Agent 在搜索完毕、子任务完成等关键行动前进行显式分析（类 CoT），提高决策质量和系统可控性。\n\n结果：构建了一个支持持久化规划和上下文卸载的多 Agent 系统，显著提升了 AI Agent 执行长周期、复杂研究任务的稳定性、深度与可控性。",
@@ -240,7 +224,7 @@
       },
       {
         "id": 4,
-        "status": "pending",
+        "status": "completed",
         "section": "技能特长",
         "strategy": "KEYWORD_FILTER",
         "original_text": "熟悉agent和工作流框架：包括但不限于langgraph, langchain, llamalindex等\n熟悉提示词工程：包括但不限于CoT，agent定义，Multi Step，xml结构化提示词，角色定义，JSON化结果等等\n熟悉使用Rag：包括但不限于Advanced RAG（前后处理），Agentic RAG等等\n有丰富的大型模型使用经验：包括但不限于Claude Haiku4.5，Sonnet 4，GPT 5，Gemini 2.5pro，GLM4.6，Deepseek v3.1，Kimi k2等等\n熟悉python后端接口框架Fastapi\n熟悉工具封装和MCP：能指挥大模型进行封装\n熟悉vibe coding：能指挥ai生成满足要求的前后端demo（如小程序）\n熟悉python的面向对象设计：异常处理，异步编程等\n熟悉数据结构和基础算法：包括但不限于哈希表，链表，队列，树，图，贪心，分治，动态规划等\n熟悉源代码部署各种GitHub项目\n熟悉linux操作环境\n了解LLM原理，NLP相关知识",
@@ -250,7 +234,7 @@
       },
       {
         "id": 5,
-        "status": "pending",
+        "status": "skipped",
         "section": "荣誉证书 - 考研分数372",
         "strategy": "KEYWORD_FILTER",
         "original_text": "考研分数372",
@@ -260,7 +244,7 @@
       },
       {
         "id": 6,
-        "status": "pending",
+        "status": "in_progress",
         "section": "教育背景 - 主修课程",
         "strategy": "KEYWORD_FILTER",
         "original_text": "硕士：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。\n本科：数据结构，算法设计，C，Python，JAVA，软件工程，数据库原理，操作系统，编译原理。",
@@ -270,12 +254,25 @@
       }
     ]
   },
-  "current_stage": "guiding",
-  "current_task_idx": 0,
-  "current_exec_doc": null,
+  "current_stage": "confirming",
+  "current_task_idx": 5,
+  "current_exec_doc": {
+    "task_id": 6,
+    "section_title": "教育背景 - 主修课程",
+    "item_id": null,
+    "operation": "update_generic",
+    "changes": {
+      "section": "教育背景 - 主修课程",
+      "content": "**硕士阶段 - 主修课程** (人工智能方向)\n- 机器学习 / 深度学习 / 计算机视觉 / 数据挖掘\n\n**本科阶段 - 主修课程** (计算机科学与技术方向)\n- 数据结构与算法 / 软件工程 / 数据库原理\n- Python编程 / 操作系统 / 编译原理",
+      "item_id": null,
+      "original_text": "硕士：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。\n本科：数据结构，算法设计，C，Python，JAVA，软件工程，数据库原理，操作系统，编译原理。"
+    },
+    "new_content_preview": "**硕士阶段 - 主修课程** (人工智能方向)\n- 机器学习 / 深度学习 / 计算机视觉 / 数据挖掘\n\n**本科阶段 - 主修课程** (计算机科学与技术方向)\n- 数据结构与算法 / 软件工程 / 数据库原理\n- Python编程 / 操作系统 / 编译原理",
+    "reason": "课程罗列清晰，但未能与目标岗位（AI应用研发，尤其是工作内容中的多Agent、工具调用、工作流等）建立强关联。缺少对选修或自学的AI相关课程（如NLP、强化学习等）的突出展示。"
+  },
   "agent_states": {
     "guide": {
-      "current_state": "DISCOVERY",
+      "current_state": "DRAFTING",
       "messages": [
         {
           "role": "user",
@@ -283,12 +280,36 @@
         },
         {
           "role": "assistant",
-          "content": "你好！我们现在来优化**实习经历 - 大模型应用工程师**这部分。\n\n📋 **任务简介**\n这是关于你在简历上提到的『车辆电控配置excel表问答助手』的项目经历。\n\n🔍 **问题诊断**\n你目前的描述技术性很强，提到了SLA（服务等级协议）和具体的实现方法，但缺少更具体的量化成果和业务价值。例如，这个工具到底帮算法部门节省了多少时间？查询准确率提升了多少？对于AI应用研发岗位，面试官会特别关注你在大模型应用设计，尤其是RAG（检索增强生成）和智能体（Agent）方面的实际处理效果和带来的价值。\n\n🎯 **优化目标**\n我们将针对【AI应用研发】岗位进行优化，突出你项目中的技术亮点（如RAG知识库设计、SQL Agent的自修正架构），并用具体的、可以量化的成果来支撑这些亮点。这样能让你的简历在众多技术细节中脱颖而出，更具说服力。\n\n💡 **首先，我想了解你对这个项目的熟悉程度，这有助于我们更高效地挖掘亮点：**\nA. 🔥 非常熟悉 - 这是我独立主导完成的项目，所有技术细节和数据我都清楚。\nB. 💡 了解原理 - 我理解项目的整体架构和做了什么，但一些具体的量化数据可能记不太清了。\nC. 📦 学习/探索项目 - 这主要是一个用于练习或探索技术的项目，可能没有实际业务场景的量化数据。\n\n**然后，我们再聊聊以下细节：**\n1. **背景 (Situation & Task):** 这个项目当时要解决的核心痛点具体是什么？算法部门的同事在检索Excel表时，最头疼的问题是什么？（例如，是查询速度慢，还是查询不准确，或是操作繁琐？）\n2. **行动 (Action):** 你提到的三类Chroma知识库（DDL/Q→SQL/数据库描述）具体是如何设计，又是如何提升SQL生成相关性的？SQL Agent的“错误自纠正”是怎么实现的？（这部分可以展示你的技术深度）\n3. **结果 (Result):** 这个工具上线后，有没有一些量化的成果？比如查询响应时间从多久降到了60秒以内？查询准确率（SQL语句能正确执行并返回预期结果的比率）大概有多大提升？或者，为算法部门的同事平均每人每周节省了多少小时？\n\n来，请先告诉我你对这个项目的熟悉程度（A、B或C），然后我们可以有针对性地聊聊上面的问题。"
+          "content": "你好！我们现在来优化**教育背景 - 主修课程**这部分。\n\n## 🔍 技能分析结果\n根据你的目标岗位（AI应用研发，尤其是多Agent、工具调用、工作流等方向），我分析了你的课程列表：\n\n### ✅ 建议保留（与目标岗位高度相关）\n**硕士课程：**\n- 机器学习\n- 深度学习\n- 计算机视觉\n- 数据挖掘\n- 模式识别（虽关联度稍低，但仍是AI核心领域）\n\n**本科课程：**\n- 数据结构\n- 算法设计\n- Python\n- 软件工程\n- 数据库原理\n- 操作系统（系统基础）\n- 编译原理（系统基础）\n\n### ❌ 建议删除（与目标岗位关联度较低）\n**本科课程：**\n- C（更偏向底层系统开发，与AI应用研发直接关联较弱）\n- JAVA（通用编程语言，但在AI领域常用Python，除非你有相关项目或技能）\n\n**原因：** 删除后可聚焦AI研发核心技能，节省篇幅。\n\n### 🔍 可能遗漏（目标岗位常见关键课程）\n以下是AI应用研发岗位常涉及的关键领域课程，请告诉我你是否选修或自学过：\n- 自然语言处理（NLP）\n- 强化学习（RL）\n- 分布式系统/云计算\n- 软件架构设计\n- Agent相关课程（如多智能体系统）\n- 特定工具框架（如LangChain、LangGraph、RAG技术等）\n\n## 💡 确认问题\n1. 以上课程分类分析是否准确？\n2. 你是否具备“可能遗漏”部分的课程知识（是/否即可）？如果具备，请告知具体有哪些。"
+        },
+        {
+          "role": "user",
+          "content": "就必要的保留，别的其实我不大了解"
+        },
+        {
+          "role": "assistant",
+          "content": "好的，明白。我们只保留最核心、与岗位直接相关的课程，不了解或不熟悉的课程不添加。\n\n根据你的确认，我将生成优化后的课程列表草稿："
+        },
+        {
+          "role": "user",
+          "content": "好的，你再重新来一次，修改一下课程背景"
+        },
+        {
+          "role": "assistant",
+          "content": "好的，收到！根据我们刚才的讨论，我将课程重新筛选，只保留与AI应用研发最相关的核心课程，并优化了表述。这是优化后的草稿："
+        },
+        {
+          "role": "user",
+          "content": "你搞错了，你把硕士课程放到本科课程里了"
+        },
+        {
+          "role": "assistant",
+          "content": "非常抱歉，是我疏忽了，分类出现了错误。感谢你的指正！我马上重新整理，确保硕士和本科课程正确归类。"
         }
       ],
-      "draft": null,
+      "draft": "**硕士阶段 - 主修课程** (人工智能方向)\n- 机器学习 / 深度学习 / 计算机视觉 / 数据挖掘\n\n**本科阶段 - 主修课程** (计算机科学与技术方向)\n- 数据结构与算法 / 软件工程 / 数据库原理\n- Python编程 / 操作系统 / 编译原理",
       "execution_doc": null,
-      "task_id": 1
+      "task_id": 6
     }
   },
   "messages": [],

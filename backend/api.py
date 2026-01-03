@@ -543,6 +543,12 @@ async def guide_step(session_id: str, req: GuideRequest):
         # 保存 Agent 状态
         state.save_agent_state(agent.name, agent.export_state())
         
+        # 从 messages 中提取 draft（提前提取，用于后续判断）
+        draft = None
+        for msg in output.messages:
+            if msg.type == "info" and "草稿预览" in str(msg.content):
+                draft = str(msg.content).replace("草稿预览:\n", "")
+        
         # ✅ 关键修复：同步状态到 WorkflowState（与 orchestrator 保持一致）
         if output.action == AgentAction.REQUEST_CONFIRM:
             state.current_stage = WorkflowStage.CONFIRMING
@@ -556,24 +562,32 @@ async def guide_step(session_id: str, req: GuideRequest):
             if isinstance(output.content, ExecutionDoc):
                 state.current_exec_doc = output.content
                 logger.info(f"✅ ExecutionDoc已保存到state（HANDOFF）: operation={output.content.operation}, section={output.content.section_title}")
+        # ✅ 新增：有草稿时允许直接确认（无需等待 REQUEST_CONFIRM）
+        elif draft and not state.current_exec_doc:
+            # 尝试从 agent 获取或构建 execution_doc
+            if hasattr(agent, '_agent') and agent._agent:
+                if agent._agent.execution_doc:
+                    state.current_exec_doc = agent._agent.execution_doc
+                    state.current_stage = WorkflowStage.CONFIRMING
+                    logger.info(f"✅ 从agent获取ExecutionDoc: operation={state.current_exec_doc.operation}")
+                elif agent._agent.draft:
+                    # 构建执行文档
+                    state.current_exec_doc = agent._agent._build_execution_doc()
+                    state.current_stage = WorkflowStage.CONFIRMING
+                    logger.info(f"✅ 草稿已生成，预构建ExecutionDoc: operation={state.current_exec_doc.operation}")
         
         # ✅ 保存状态到磁盘（包含新的 current_exec_doc）
         workflow_manager.save(state)
         logger.info(f"✅ WorkflowState已保存，current_exec_doc: {state.current_exec_doc is not None}")
         
         # 处理输出
-        # 使用双重检查：优先使用 state.current_stage（由 orchestrator 同步），同时检查 output.action
+        # 使用双重检查：优先使用 state.current_stage，同时检查 output.action 和草稿存在
         is_confirming = (
             state.current_stage == WorkflowStage.CONFIRMING or 
-            output.action == AgentAction.REQUEST_CONFIRM
+            output.action == AgentAction.REQUEST_CONFIRM or
+            draft is not None  # 有草稿时也允许确认
         )
         is_finished = output.action == AgentAction.HANDOFF and output.next_agent == "editor"
-        
-        # 从 messages 中提取 draft
-        draft = None
-        for msg in output.messages:
-            if msg.type == "info" and "草稿预览" in str(msg.content):
-                draft = str(msg.content).replace("草稿预览:\n", "")
         
         # 安全地获取reply内容（查找type="answer"的消息）
         reply = ""

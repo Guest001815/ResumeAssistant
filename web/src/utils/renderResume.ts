@@ -41,6 +41,22 @@ function esc(x: any) {
 }
 
 /**
+ * 处理行内Markdown格式：**加粗**、*斜体*、`代码`
+ * @param s 原始文本
+ * @returns 转换后的HTML字符串
+ */
+function inlineMd(s: string): string {
+  let t = esc(s);
+  // 加粗: **text** 或 __text__
+  t = t.replace(/(\*\*|__)(.*?)\1/g, (_m, _d, inner) => `<strong>${inner}</strong>`);
+  // 斜体: *text* 或 _text_
+  t = t.replace(/(\*|_)(.*?)\1/g, (_m, _d, inner) => `<em>${inner}</em>`);
+  // 行内代码: `code`
+  t = t.replace(/`([^`]+)`/g, (_m, code) => `<code>${code}</code>`);
+  return t;
+}
+
+/**
  * 智能格式化文本：识别段落、列表、换行等层级结构
  * @param text 原始文本（可能包含 \n 换行符）
  * @returns 格式化后的 HTML 字符串
@@ -63,7 +79,7 @@ function formatText(text: string): string {
     if (isNumberedList) {
       const items = lines.map(line => {
         const content = line.replace(/^\d+\.\s+/, '');
-        return `<li>${esc(content)}</li>`;
+        return `<li>${inlineMd(content)}</li>`;
       }).join('');
       formattedParagraphs.push(`<ol>${items}</ol>`);
       continue;
@@ -74,7 +90,7 @@ function formatText(text: string): string {
     if (isBulletList) {
       const items = lines.map(line => {
         const content = line.replace(/^[-•]\s+/, '');
-        return `<li>${esc(content)}</li>`;
+        return `<li>${inlineMd(content)}</li>`;
       }).join('');
       formattedParagraphs.push(`<ul>${items}</ul>`);
       continue;
@@ -82,9 +98,9 @@ function formatText(text: string): string {
     
     // 普通段落：单行或多行用 <br> 连接
     if (lines.length === 1) {
-      formattedParagraphs.push(`<p>${esc(lines[0])}</p>`);
+      formattedParagraphs.push(`<p>${inlineMd(lines[0])}</p>`);
     } else {
-      const content = lines.map(esc).join('<br>');
+      const content = lines.map(inlineMd).join('<br>');
       formattedParagraphs.push(`<p>${content}</p>`);
     }
   }
