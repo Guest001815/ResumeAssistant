@@ -1,0 +1,63 @@
+{
+  "session_id": "e9c9e5e5-d673-4ac1-88b8-f2321d47b92d",
+  "resume": {
+    "basics": {
+      "name": "Test User",
+      "label": null,
+      "email": "test@example.com",
+      "phone": "1234567890",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "exp-1",
+        "title": "Work Experience",
+        "type": "experience",
+        "items": [
+          {
+            "id": "item-1",
+            "title": "Software Engineer",
+            "organization": "Tech Corp",
+            "date_start": "2020-01",
+            "date_end": "2023-01",
+            "location": null,
+            "highlights": [
+              "Developed cool features",
+              "Fixed bugs"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "user_intent": "Make it more professional",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "个人信息",
+        "original_text": "{\"name\": \"Test User\", \"label\": null, \"email\": \"test@example.com\", \"phone\": \"1234567890\", \"links\": []}",
+        "diagnosis": "\"label\" 字段为 null 表示没有明确的职位头衔概述，这通常会作为简历顶部的一个摘要或目标岗位陈述，用于向招聘方清晰地传达你的专业定位。缺少此部分会使简历专业度和目标感下降。",
+        "goal": "在简历顶部添加一个专业的、与目标岗位相匹配的 \"Summary\" 或 \"Professional Profile\" 字段，用2-3句话概括专业领域、核心技能和职业目标。"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "工作经历 - Software Engineer at Tech Corp",
+        "original_text": "[\"Developed cool features\", \"Fixed bugs\"]",
+        "diagnosis": "陈述过于口语化、模糊（\"cool features\"），并且完全缺乏量化结果和业务影响。这只是任务列表，没有展示作为软件工程师的价值和贡献。对于希望显得更专业的简历来说，这是致命弱点。",
+        "goal": "使用 STAR 原则改写这两条工作亮点。具体描述开发了什么功能/特性，使用的技术栈，以及带来的可测量结果（如：用户增长、性能提升、Bug修复率等）。"
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

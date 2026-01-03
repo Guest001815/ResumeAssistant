@@ -1,0 +1,14 @@
+{
+  "id": "ee83e633-1f17-43cf-9c26-dcd4aabd101b",
+  "name": "Test User - Make it more profess - Make",
+  "resume_file_name": "Test User",
+  "job_title": "Make it more profess",
+  "job_company": "Make",
+  "created_at": "2025-12-31T17:50:54.566958",
+  "updated_at": "2025-12-31T17:51:17.041104",
+  "progress": {
+    "completed": 0,
+    "total": 2
+  },
+  "status": "active"
+}

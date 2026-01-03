@@ -1,0 +1,14 @@
+{
+  "id": "cbc9c234-9a72-430c-b93e-d7945839be6d",
+  "name": "测试用户 - 后端开发 - Python",
+  "resume_file_name": "测试用户",
+  "job_title": "后端开发",
+  "job_company": "Python",
+  "created_at": "2025-12-31T15:53:25.893845",
+  "updated_at": "2025-12-31T15:54:10.697365",
+  "progress": {
+    "completed": 0,
+    "total": 5
+  },
+  "status": "active"
+}

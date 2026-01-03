@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-12-31T15:53:13.576786",
+  "tests": [
+    {
+      "name": "健康检查",
+      "passed": true,
+      "message": "状态码=200, agents=['plan', 'guide', 'editor']",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:15.634084"
+    },
+    {
+      "name": "获取会话列表",
+      "passed": true,
+      "message": "状态码=200, 会话数=0",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:17.656704"
+    },
+    {
+      "name": "创建会话",
+      "passed": true,
+      "message": "状态码=200, session_id=b230a631-7ad5-4454-b686-90734fba6e7c",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:19.699161"
+    },
+    {
+      "name": "API端点测试",
+      "passed": true,
+      "message": "通过=2/2",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:23.823857"
+    },
+    {
+      "name": "创建会话",
+      "passed": true,
+      "message": "状态码=200, session_id=cbc9c234-9a72-430c-b93e-d7945839be6d",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:25.895919"
+    },
+    {
+      "name": "生成计划",
+      "passed": false,
+      "message": "异常: HTTPConnectionPool(host='localhost', port=8001): Read timed out. (read timeout=30)",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:57.944118"
+    },
+    {
+      "name": "Editor Agent修复",
+      "passed": false,
+      "message": "无法生成计划",
+      "details": null,
+      "timestamp": "2025-12-31T15:53:57.944118"
+    },
+    {
+      "name": "创建会话",
+      "passed": false,
+      "message": "异常: HTTPConnectionPool(host='localhost', port=8001): Read timed out. (read timeout=10)",
+      "details": null,
+      "timestamp": "2025-12-31T15:54:10.025067"
+    },
+    {
+      "name": "Guide Agent稳定性",
+      "passed": false,
+      "message": "无法创建测试会话",
+      "details": null,
+      "timestamp": "2025-12-31T15:54:10.025067"
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "passed": 5,
+    "failed": 4
+  }
+}

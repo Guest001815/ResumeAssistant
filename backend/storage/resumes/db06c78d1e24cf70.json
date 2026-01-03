@@ -1,0 +1,26 @@
+{
+  "metadata": {
+    "id": "db06c78d1e24cf70",
+    "name": "测试",
+    "label": "",
+    "created_at": "2026-01-02T20:09:51.466943",
+    "updated_at": "2026-01-02T20:09:51.471579"
+  },
+  "resume": {
+    "basics": {
+      "name": "测试",
+      "label": null,
+      "email": "test@test.com",
+      "phone": "123",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "edu",
+        "title": "教育",
+        "type": "generic",
+        "items": []
+      }
+    ]
+  }
+}

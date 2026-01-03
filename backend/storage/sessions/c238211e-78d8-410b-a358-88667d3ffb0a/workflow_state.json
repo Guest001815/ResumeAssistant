@@ -1,0 +1,278 @@
+{
+  "session_id": "c238211e-78d8-410b-a358-88667d3ffb0a",
+  "resume": {
+    "basics": {
+      "name": "刘锦文",
+      "label": null,
+      "email": "2811455492@qq.com",
+      "phone": "15706668172",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "education",
+        "title": "教育背景",
+        "type": "generic",
+        "items": [
+          {
+            "id": "edu1",
+            "title": "中国农业大学 (985)",
+            "subtitle": "计算机技术 (硕士)",
+            "date": "2024-09 ~ 至今",
+            "description": "主修课程：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。"
+          },
+          {
+            "id": "edu2",
+            "title": "东北电力大学",
+            "subtitle": "软件工程 (本科)",
+            "date": "2020-09 ~ 2024-06",
+            "description": "专业成绩：GPA 3.66/4（专业前5%）\n主修课程：数据结构，算法设计，C，Python，JAVA，软件工程，数据库原理，操作系统，编译原理。"
+          }
+        ]
+      },
+      {
+        "id": "experience",
+        "title": "实习经历",
+        "type": "experience",
+        "items": [
+          {
+            "id": "exp1",
+            "title": "大模型应用工程师",
+            "organization": "北京理想汽车科技有限公司",
+            "date_start": "2025-08",
+            "date_end": "至今",
+            "location": null,
+            "highlights": [
+              "车辆电控配置excel表问答助手(独立负责)\n项目目标：解决算法部门在进行多表检索难的问题\n- 设计并实现“自然语言→SQL→只读结果”的问答服务，Excel 数据拆解落库至 SQLite，结构化返回结论与结果集，满足≤60s 响应 SLA。\n- 设计三类 Chroma 知识库 (DDL/Q→SQL/数据库描述)，提升SQL 生成的相关性\n- 设计 SQL Agent，采用React范式设计，设计了SQL错误自纠正，保证SQL生成的稳定性\n- 接口使用 FastAPI 进行封装，便于运维团队处理。\n- 通过环境变量抽象 LLM（OpenAI 兼容）与库路径，支持跨环境快速切换与配置管理，保障工程落地与维护效率。",
+              "自动化测试用例助手 (独立负责)\n项目目标：应用工作流解决 QA 团队痛点，即根据PRD人工编写测试用例耗时长且MC/DC覆盖率难以保证的问题。\n解决策略\n1、通过任务拆解（Task Decomposition）和思维链（CoT）引导，提升输出质量；\n2、结果强制按JSON Schema输出，保证输出稳定性，提升下一步大模型的理解能力；\n3、领域知识注入，注入等价类划分、边界值分析 (BVA) 和 MC/DC（修正条件/判定覆盖）等专业测试方法论的定义、流程与约束，确保每个独立条件都对总体判定结果的影响都被独立验证；\n4、引入人在环中，便于测试人员编辑确认生成脑图；\n5、xml结构化提示词，便于大模型理解。\n结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作，配套的测试脑图能直观展现测试逻辑，方便测试人员核验 MC/DC 覆盖率的完整性。"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "project",
+        "title": "项目经验",
+        "type": "generic",
+        "items": [
+          {
+            "id": "proj1",
+            "title": "DeepResearch Agent",
+            "subtitle": "全部",
+            "date": "2025-10 ~ 2025-10",
+            "description": "项目目标：解决 Agent 在执行长周期、复杂研究任务时的核心痛点，即：1) 缺乏持久化规划导致“任务漂移”；2) 单一Agent 架构容易上下文膨胀。\n\n解决策略：\n1. 设计“先规划后执行”机制：通过自定义 State（包含 todo 列表）并结合“工具状态注入”（write/read_todo 工具），强制 Agent 在执行前进行任务分解，实现任务规划的持久化，提高LLM执行质量。\n2. 实现“上下文卸载”：设计 write_file 和 read_file 工具，允许 Agent 将长篇研究内容或历史记录卸载到状态（内存）中，仅在消息记录中保留文件名和结构化摘要，突破 LLM 上下文限制。\n3. 构建多 Agent 架构：引入 Task（任务分派）工具，主 Agent 通过调用该工具来委派子 Agent，子agent上下文与主agent隔离，解决单agent工作上下文膨胀的问题。\n4. 引入“强制思考”（Forced Thinking）：设计 think 工具，强制 Agent 在搜索完毕、子任务完成等关键行动前进行显式分析（类 CoT），提高决策质量和系统可控性。\n\n结果：构建了一个支持持久化规划和上下文卸载的多 Agent 系统，显著提升了 AI Agent 执行长周期、复杂研究任务的稳定性、深度与可控性。"
+          }
+        ]
+      },
+      {
+        "id": "skills",
+        "title": "技能特长",
+        "type": "generic",
+        "items": [
+          {
+            "id": "skill1",
+            "title": "熟悉agent和工作流框架",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于langgraph, langchain, llamalindex等"
+          },
+          {
+            "id": "skill2",
+            "title": "熟悉提示词工程",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于CoT，agent定义，Multi Step，xml结构化提示词，角色定义，JSON化结果等等"
+          },
+          {
+            "id": "skill3",
+            "title": "熟悉使用Rag",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于Advanced RAG（前后处理），Agentic RAG等等"
+          },
+          {
+            "id": "skill4",
+            "title": "有丰富的大型模型使用经验",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于Claude Haiku4.5，Sonnet 4，GPT 5，Gemini 2.5pro，GLM4.6，Deepseek v3.1，Kimi k2等等"
+          },
+          {
+            "id": "skill5",
+            "title": "熟悉python后端接口框架Fastapi",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill6",
+            "title": "熟悉工具封装和MCP",
+            "subtitle": null,
+            "date": null,
+            "description": "能指挥大模型进行封装"
+          },
+          {
+            "id": "skill7",
+            "title": "熟悉vibe coding",
+            "subtitle": null,
+            "date": null,
+            "description": "能指挥ai生成满足要求的前后端demo（如小程序）"
+          },
+          {
+            "id": "skill8",
+            "title": "熟悉python的面向对象设计",
+            "subtitle": null,
+            "date": null,
+            "description": "异常处理，异步编程等"
+          },
+          {
+            "id": "skill9",
+            "title": "熟悉数据结构和基础算法",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于哈希表，链表，队列，树，图，贪心，分治，动态规划等"
+          },
+          {
+            "id": "skill10",
+            "title": "熟悉源代码部署各种GitHub项目",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill11",
+            "title": "熟悉linux操作环境",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill12",
+            "title": "了解LLM原理，NLP相关知识",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          }
+        ]
+      },
+      {
+        "id": "awards",
+        "title": "荣誉证书",
+        "type": "generic",
+        "items": [
+          {
+            "id": "award1",
+            "title": "考研分数372",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award2",
+            "title": "英语六级530",
+            "subtitle": "听说读写能力良好，能浏览英文文档和书籍",
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award3",
+            "title": "PAT甲级90",
+            "subtitle": "（满分100）",
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award4",
+            "title": "蓝桥杯省赛一等奖",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award5",
+            "title": "校级一等奖学金",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award6",
+            "title": "专利一篇",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          }
+        ]
+      }
+    ]
+  },
+  "user_intent": "我要应聘Java工程师",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "实习经历 - 大模型应用工程师",
+        "original_text": "车辆电控配置excel表问答助手(独立负责)\n项目目标：解决算法部门在进行多表检索难的问题\n- 设计并实现“自然语言→SQL→只读结果”的问答服务，Excel 数据拆解落库至 SQLite，结构化返回结论与结果集，满足≤60s 响应 SLA。\n- 设计三类 Chroma 知识库 (DDL/Q→SQL/数据库描述)，提升SQL 生成的相关性\n- 设计 SQL Agent，采用React范式设计，设计了SQL错误自纠正，保证SQL生成的稳定性\n- 接口使用 FastAPI 进行封装，便于运维团队处理。\n- 通过环境变量抽象 LLM（OpenAI 兼容）与库路径，支持跨环境快速切换与配置管理，保障工程落地与维护效率。",
+        "diagnosis": "该经历虽然技术描述详细，但严重偏向AI应用和Prompt工程，使用的技术栈（FastAPI, SQLite, Chroma）与Java工程师岗位关联度弱。缺乏JAVA技术栈的体现，无法有效支持Java工程师的求职意图。描述中未突出任何Java相关技术或框架。",
+        "goal": "重写该经历，重点挖掘项目中可能涉及的Java技术栈（如使用Java处理Excel、后端服务等）。如果项目确实是Python实现的，需调整表述，强调软件工程通用能力（如模块设计、接口封装、问题解决）的可迁移性，并弱化AI-specific细节。"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "实习经历 - 大模型应用工程师",
+        "original_text": "自动化测试用例助手 (独立负责)\n项目目标：应用工作流解决 QA 团队痛点，即根据PRD人工编写测试用例耗时长且MC/DC覆盖率难以保证的问题。\n解决策略\n1、通过任务拆解（Task Decomposition）和思维链（CoT）引导，提升输出质量；\n2、结果强制按JSON Schema输出，保证输出稳定性，提升下一步大模型的理解能力；\n3、领域知识注入，注入等价类划分、边界值分析 (BVA) 和 MC/DC（修正条件/判定覆盖）等专业测试方法论的定义、流程与约束，确保每个独立条件都对总体判定结果的影响都被独立验证；\n4、引入人在环中，便于测试人员编辑确认生成脑图；\n5、xml结构化提示词，便于大模型理解。\n结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作，配套的测试脑图能直观展现测试逻辑，方便测试人员核验 MC/DC 覆盖率的完整性。",
+        "diagnosis": "描述完全聚焦于Prompt工程和AI工作流设计，与Java开发无关。对于Java工程师岗位，这段经历的价值在于其背后的软件工程思维和对测试流程的理解，但当前描述掩盖了这一点。",
+        "goal": "重构描述，剥离AI外壳，重点突出项目中的软件工程实践，如：对测试方法论（等价类、边界值、MC/DC）的理解和应用、通过工具（即使是用Python）提升开发/测试效率的工程思维、以及独立负责项目从定义到交付的全过程能力。并将技术细节调整得更通用。"
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "项目经验 - DeepResearch Agent",
+        "original_text": "项目目标：解决 Agent 在执行长周期、复杂研究任务时的核心痛点，即：1) 缺乏持久化规划导致“任务漂移”；2) 单一Agent 架构容易上下文膨胀。\n\n解决策略：\n1. 设计“先规划后执行”机制：通过自定义 State（包含 todo 列表）并结合“工具状态注入”（write/read_todo 工具），强制 Agent 在执行前进行任务分解，实现任务规划的持久化，提高LLM执行质量。\n2. 实现“上下文卸载”：设计 write_file 和 read_file 工具，允许 Agent 将长篇研究内容或历史记录卸载到状态（内存）中，仅在消息记录中保留文件名和结构化摘要，突破 LLM 上下文限制。\n3. 构建多 Agent 架构：引入 Task（任务分派）工具，主 Agent 通过调用该工具来委派子 Agent，子agent上下文与主agent隔离，解决单agent工作上下文膨胀的问题。\n4. 引入“强制思考”（Forced Thinking）：设计 think 工具，强制 Agent 在搜索完毕、子任务完成等关键行动前进行显式分析（类 CoT），提高决策质量和系统可控性。\n\n结果：构建了一个支持持久化规划和上下文卸载的多 Agent 系统，显著提升了 AI Agent 执行长周期、复杂研究任务的稳定性、深度与可控性。",
+        "diagnosis": "这是一个纯AI Agent项目，技术描述与Java技术栈毫无交集。对于Java工程师岗位，此项目经历几乎没有直接价值，甚至会分散招聘者注意力，怀疑候选人是否专注于Java开发。",
+        "goal": "考虑大幅简化或移至“其他经历”部分。如果保留，必须彻底重构描述，强调其中的系统设计思想、多模块解耦、状态管理等软件工程通用能力，并完全避免提及langgraph、Agent等特定AI术语。重点体现设计模式和架构思维。"
+      },
+      {
+        "id": 4,
+        "status": "pending",
+        "section": "技能特长",
+        "original_text": "技能列表:\n- 熟悉agent和工作流框架 (包括但不限于langgraph, langchain, llamalindex等)\n- 熟悉提示词工程 (包括但不限于CoT，agent定义，Multi Step，xml结构化提示词，角色定义，JSON化结果等等)\n- 熟悉使用Rag (包括但不限于Advanced RAG（前后处理），Agentic RAG等等)\n- 有丰富的大型模型使用经验 (包括但不限于Claude Haiku4.5，Sonnet 4，GPT 5，Gemini 2.5pro，GLM4.6，Deepseek v3.1，Kimi k2等等)\n- 熟悉python后端接口框架Fastapi\n- 熟悉工具封装和MCP (能指挥大模型进行封装)\n- 熟悉vibe coding (能指挥ai生成满足要求的前后端demo（如小程序）)\n- 熟悉python的面向对象设计 (异常处理，异步编程等)\n- 熟悉数据结构和基础算法 (包括但不限于哈希表，链表，队列，树，图，贪心，分治，动态规划等)\n- 熟悉源代码部署各种GitHub项目\n- 熟悉linux操作环境\n- 了解LLM原理，NLP相关知识",
+        "diagnosis": "技能列表严重偏向AI/ML和大模型应用，Java相关技能（如Java语言本身、Spring全家桶、MyBatis、JVM、MySQL、Redis、消息队列、微服务等）完全缺失。这对于应聘Java工程师是致命的短板，会让简历直接进入垃圾桶。",
+        "goal": "彻底重构技能模块。将AI/ML相关技能合并精简为1-2项，置于次要位置。重点补充和突出Java技术栈技能，包括：Java核心、Spring Framework (Boot, Cloud, MVC, Security等)、ORM框架、数据库、缓存、消息中间件、开发工具（Maven/Git）、Linux、设计模式等。确保技能列表与目标岗位高度匹配。"
+      },
+      {
+        "id": 5,
+        "status": "pending",
+        "section": "教育背景",
+        "original_text": "主修课程：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。",
+        "diagnosis": "硕士阶段的主修课程全部是AI/ML方向，与Java工程师的常见技术栈（如Java、分布式系统、软件工程、数据库系统等）不匹配。这可能会让招聘者认为候选人的专业方向是AI而非后端开发。",
+        "goal": "优化课程描述。可以补充或强调硕士阶段可能修读的、与软件工程/系统开发相关的课程（如高级软件工程、分布式计算、网络等）。如果确实没有，可以考虑将课程列表调整为更通用的计算机核心课程描述，或加入自学/项目涉及的Java相关技能说明。"
+      },
+      {
+        "id": 6,
+        "status": "pending",
+        "section": "荣誉证书",
+        "original_text": "考研分数372\n英语六级530\nPAT甲级90\n蓝桥杯省赛一等奖\n校级一等奖学金\n专利一篇",
+        "diagnosis": "证书列表尚可，体现了算法能力和学习能力。但“专利一篇”缺乏细节，无法判断是否与软件工程/Java开发相关。如果专利是AI方向的，则对Java岗位价值有限。",
+        "goal": "为“专利一篇”补充简要说明，阐明专利内容是否与软件开发、系统设计或Java技术相关。如果无关，考虑弱化或移除。确保所有荣誉都服务于塑造一个扎实的计算机基础扎实、有潜力的Java工程师形象。"
+      },
+      {
+        "id": 7,
+        "status": "pending",
+        "section": "整体简历定位",
+        "original_text": "整份简历当前呈现出强烈的大模型应用工程师/AI工程师倾向，与“Java工程师”的User Intent严重不符。",
+        "diagnosis": "简历的实习、项目、技能、甚至部分教育背景都集中在AI领域，缺乏对Java技术栈的任何展示。这会导致HR或技术面试官认为候选人投错了岗位，或缺乏Java相关经验，从而直接拒绝。",
+        "goal": "需要一场彻底的“转型”手术。策略：1) 在实习和项目经历中，挖掘并强调通用软件工程能力（系统设计、问题解决、接口设计）；2) 彻底重写技能板块，以Java技术栈为核心；3) 调整教育背景的描述侧重点；4) 整体叙述逻辑要从“AI应用者”转向“软件系统构建者”。"
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

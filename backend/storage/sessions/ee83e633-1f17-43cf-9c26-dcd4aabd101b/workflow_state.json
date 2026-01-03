@@ -1,0 +1,63 @@
+{
+  "session_id": "ee83e633-1f17-43cf-9c26-dcd4aabd101b",
+  "resume": {
+    "basics": {
+      "name": "Test User",
+      "label": null,
+      "email": "test@example.com",
+      "phone": "1234567890",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "exp-1",
+        "title": "Work Experience",
+        "type": "experience",
+        "items": [
+          {
+            "id": "item-1",
+            "title": "Software Engineer",
+            "organization": "Tech Corp",
+            "date_start": "2020-01",
+            "date_end": "2023-01",
+            "location": null,
+            "highlights": [
+              "Developed cool features",
+              "Fixed bugs"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "user_intent": "Make it more professional",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "Personal Information (Basics)",
+        "original_text": "{\"name\":\"Test User\",\"label\":null,\"email\":\"test@example.com\",\"phone\":\"1234567890\",\"links\":[]}",
+        "diagnosis": "基础信息结构简单，但‘label’字段为空，未能提供专业的职业头衔总结。联系方式虽然是标准格式，但邮件和电话的呈现略显直白。",
+        "goal": "更新‘label’字段为专业头衔（如“Software Engineer”），调整姓名格式使其更突出，并可考虑优化电子邮件显示或增加简介链接（如LinkedIn、GitHub）。"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "Work Experience - Item 1",
+        "original_text": "{\"title\":\"Software Engineer\",\"organization\":\"Tech Corp\",\"date_start\":\"2020-01\",\"date_end\":\"2023-01\",\"highlights\":[\"Developed cool features\",\"Fixed bugs\"]}",
+        "diagnosis": "工作经历描述过于宽泛和口语化（\"cool features\", \"Fixed bugs\"）。它缺乏具体的技术栈、项目成果、量化数据和任何解决问题的背景或影响。这降低了专业性和说服力。",
+        "goal": "将工作描述重写为专业、量化和以结果为导向的要点。使用STAR（情境、任务、行动、结果）原则，具体说明所开发的功能、解决的关键问题以及取得的业务成果。"
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

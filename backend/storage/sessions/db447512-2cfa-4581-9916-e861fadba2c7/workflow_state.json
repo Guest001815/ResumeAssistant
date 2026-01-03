@@ -1,0 +1,29 @@
+{
+  "session_id": "db447512-2cfa-4581-9916-e861fadba2c7",
+  "resume": {
+    "basics": {
+      "name": "测试",
+      "label": null,
+      "email": "test@test.com",
+      "phone": "123",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "edu",
+        "title": "教育",
+        "type": "generic",
+        "items": []
+      }
+    ]
+  },
+  "user_intent": null,
+  "plan": null,
+  "current_stage": "init",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {},
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

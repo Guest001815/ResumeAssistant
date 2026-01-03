@@ -1,0 +1,82 @@
+{
+  "session_id": "cbc9c234-9a72-430c-b93e-d7945839be6d",
+  "resume": {
+    "basics": {
+      "name": "测试用户",
+      "label": null,
+      "email": "test@example.com",
+      "phone": "13800138000",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "education",
+        "title": "教育背景",
+        "type": "generic",
+        "items": [
+          {
+            "id": "edu1",
+            "title": "测试大学",
+            "subtitle": "计算机科学",
+            "date": "2020-2024",
+            "description": null
+          }
+        ]
+      }
+    ]
+  },
+  "user_intent": "优化简历以申请Python后端开发岗位",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "基本信息",
+        "original_text": "整个'basics'部分仅包含姓名、邮箱、电话，缺少与Python后端开发相关的关键个人标签（如：Python后端开发工程师）和在线个人资料链接（如：GitHub、技术博客）。",
+        "diagnosis": "对于技术岗位，简历中的'basics'部分缺少核心的个人职业标签（label），无法在简历顶部快速定位求职方向。此外，没有任何在线技术资料链接（如GitHub、技术博客），这是后端开发者简历的致命弱点，因为招聘方无法立即评估你的代码和项目经验。",
+        "goal": "在'basics'部分添加一个简洁有力的'label'（例如：Python后端开发工程师），并添加'links'字段，至少包含GitHub链接，以展示技术能力和项目经验。"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "教育背景",
+        "original_text": "仅包含学校、专业和日期，描述为空。",
+        "diagnosis": "教育背景的描述字段为空，浪费了展示与目标岗位相关性的机会。对于应届生或初级开发者，可以通过课程项目、GPA（如优秀）、相关课程（如数据结构、算法、数据库等）来强化技术基础。",
+        "goal": "填充'description'字段，列举与Python后端开发高度相关的核心课程，如有较高的GPA或排名可注明，还可以提及毕业设计/课程大作业中与后端开发相关的部分。"
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "专业能力/技术栈",
+        "original_text": "整个简历中完全缺失对技术技能（Skills）的描述。",
+        "diagnosis": "对于Python后端开发岗位，技术栈是最核心的筛选标准之一。目前简历中没有'Sections'来展示编程语言、框架、数据库、工具等技能，这会导致简历在第一轮筛选中因缺乏关键词而被直接过滤掉。这是最致命的弱点之一。",
+        "goal": "新增一个'Sections'，标题为'技术技能'或'专业技能'。详细列出Python语言、相关框架（如Django, Flask, FastAPI）、数据库（如MySQL, PostgreSQL, Redis）、消息队列、容器化技术、云服务、开发工具等。"
+      },
+      {
+        "id": 4,
+        "status": "pending",
+        "section": "工作/项目经历",
+        "original_text": "整个简历中完全缺失'工作经历'和'项目经历'部分。",
+        "diagnosis": "简历中缺少工作/项目经历，这是证明你能否胜任Python后端开发岗位最有力的证据。没有这一部分，简历内容空洞，无法向招聘方展示你的实际编程能力、问题解决能力和项目贡献。这是简历中最致命的弱点。",
+        "goal": "新增'工作经历'或'项目经历'Section。即使没有全职工作，也必须包含至少2-3个高质量的个人项目、课程项目或实习经历。每个项目需遵循STAR原则（情景、任务、行动、结果），重点描述技术细节、个人贡献和量化成果（如优化性能提升X%，日均处理Y条数据）。"
+      },
+      {
+        "id": 5,
+        "status": "pending",
+        "section": "自我评价/求职意向",
+        "original_text": "整个简历中完全缺失'求职意向'或'自我评价'部分。",
+        "diagnosis": "简历缺少明确的求职意向（例如：Python后端开发工程师）和自我评价，无法快速让招聘方理解你的职业定位和核心优势，尤其是在简历内容较少的情况下，这个部分可以补充技术热情和学习能力等信息。",
+        "goal": "新增一个'Sections'，例如'求职意向'或'个人总结'。明确写出求职岗位（Python后端开发），并用简洁的语言概括你的技术栈、项目经验和职业目标，突出你的学习能力、问题解决能力和团队协作精神。"
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

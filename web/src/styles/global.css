@@ -1,0 +1,289 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义组件类 */
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-primary-600 text-white rounded-md 
+           hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 
+           focus:ring-offset-2 transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-gray-700 border border-gray-300 
+           rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-primary-500 
+           focus:ring-offset-2 transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 
+           overflow-hidden;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md 
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+           transition-colors duration-200;
+  }
+}
+
+/* 可访问性增强 */
+@layer utilities {
+  .focus-visible {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 
+           focus:ring-offset-2;
+  }
+}
+
+/* 响应式布局 */
+@layer utilities {
+  /* 移动端布局 */
+  @media (max-width: 767px) {
+    .page {
+      @apply grid-cols-1 grid-rows-2;
+      grid-template-columns: 1fr !important;
+      grid-template-rows: 1fr 1fr;
+      height: 100vh;
+      padding: 12px;
+      gap: 12px;
+    }
+    
+    .chat-container {
+      height: 100%;
+    }
+    
+    .resume-preview iframe,
+    .markdown-pane .markdown-textarea {
+      height: 100%;
+    }
+    
+    .splitter {
+      @apply hidden;
+    }
+    
+    .column {
+      @apply h-full;
+    }
+  }
+  
+  /* 平板端布局 */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .page {
+      @apply gap-3 p-4;
+    }
+    
+    .chat-container {
+      height: calc(100vh - 80px);
+    }
+    
+    .resume-preview iframe,
+    .markdown-pane .markdown-textarea {
+      height: calc(100vh - 80px);
+    }
+  }
+  
+  /* 桌面端布局 */
+  @media (min-width: 1024px) {
+    .chat-container {
+      height: calc(100vh - 96px);
+    }
+    
+    .resume-preview iframe,
+    .markdown-pane .markdown-textarea {
+      height: calc(100vh - 96px);
+    }
+  }
+}
+
+/* 触摸优化 */
+@media (pointer: coarse) {
+  button, 
+  input, 
+  textarea, 
+  [role="button"], 
+  [role="menuitem"] {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    @apply min-h-[44px] px-6 py-3;
+  }
+  
+  .input-field {
+    @apply min-h-[44px] px-4 py-3;
+  }
+}
+
+/* 暗色模式支持 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+}
+
+/* 保留现有的基础样式，但使用Tailwind类 */
+html, body, #root {
+  @apply h-full m-0;
+}
+
+.page {
+  @apply grid gap-0 p-6 box-border;
+  grid-template-columns: 1fr 1fr;
+}
+
+.column .title {
+  @apply flex items-center justify-between mb-3 font-semibold h-9;
+}
+
+.chat-container {
+  @apply flex flex-col;
+}
+
+.chat-history {
+  @apply flex-1 overflow-auto border border-gray-200 rounded-lg p-3;
+}
+
+.msg {
+  @apply whitespace-pre-wrap mb-2;
+}
+
+.msg.user {
+  @apply text-gray-800;
+}
+
+.msg.assistant {
+  @apply text-gray-800;
+}
+
+.msg.assistant.think {
+  @apply text-gray-500 italic;
+}
+
+.chat-input {
+  @apply flex gap-2 mt-2;
+}
+
+.chat-input input {
+  @apply flex-1 px-3 py-2 border border-gray-300 rounded-md;
+}
+
+.chat-input button {
+  @apply px-4 py-2 border-none bg-primary-600 text-white rounded-md cursor-pointer;
+}
+
+.resume-preview iframe {
+  @apply w-full border border-gray-200 rounded-lg;
+}
+
+.right-pane-switch {
+  @apply inline-flex items-center gap-2 relative;
+}
+
+.right-pane-switch .markdown-segment {
+  @apply mb-0;
+}
+
+.right-pane-switch button {
+  @apply px-3 py-1 border border-gray-200 bg-gray-50 rounded-md cursor-pointer text-gray-800;
+}
+
+.right-pane-switch button.active {
+  @apply bg-primary-600 text-white border-primary-600;
+}
+
+.right-pane-switch .export-icon-btn {
+  @apply inline-flex items-center justify-center w-7 h-7 p-0 border-none bg-transparent rounded-md text-gray-800;
+}
+
+.right-pane-switch .export-icon-btn:hover {
+  @apply bg-gray-100 text-primary-600;
+}
+
+.right-pane-switch .export-icon-btn:active {
+  @apply bg-gray-200;
+}
+
+.right-pane-switch .export-menu {
+  @apply absolute top-full right-0 mt-2 min-w-[120px] bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-10;
+}
+
+.right-pane-switch .export-menu button {
+  @apply w-full text-left px-3 py-2 border-none bg-transparent cursor-pointer text-gray-800 rounded-md;
+}
+
+.right-pane-switch .export-menu button:hover {
+  @apply bg-blue-50 text-primary-600;
+}
+
+.markdown-pane .markdown-toolbar {
+  @apply flex gap-2 mb-2;
+}
+
+.markdown-pane .markdown-toolbar button {
+  @apply px-3 py-2 border border-gray-200 bg-gray-50 rounded-md cursor-pointer text-gray-800;
+}
+
+.markdown-pane .markdown-toolbar button.active {
+  @apply bg-primary-600 text-white border-primary-600;
+}
+
+.markdown-pane .markdown-textarea {
+  @apply w-full border border-gray-200 rounded-lg p-3 box-border font-mono resize-none;
+}
+
+.markdown-pane .markdown-preview iframe {
+  @apply w-full border border-gray-200 rounded-lg;
+}
+
+.markdown-segment {
+  @apply inline-flex gap-0 border border-gray-200 rounded-lg overflow-hidden mb-2;
+}
+
+.markdown-segment input[type="radio"] {
+  @apply hidden;
+}
+
+.markdown-segment label {
+  @apply px-4 py-2 cursor-pointer bg-gray-50 text-gray-800 border-r border-gray-200 select-none;
+}
+
+.markdown-segment label:last-of-type {
+  @apply border-r-0;
+}
+
+.markdown-segment label.active {
+  @apply bg-blue-50 text-primary-600 shadow-inner;
+}
+
+/* splitter */
+.splitter {
+  @apply relative w-3 cursor-col-resize self-stretch touch-none;
+}
+
+.splitter::before {
+  content: "";
+  @apply absolute left-1/2 top-0 bottom-0 w-px bg-gray-200 transform -translate-x-px;
+}
+
+.splitter::after {
+  content: "";
+  @apply absolute left-1/2 top-1/2 w-2 h-6 transform -translate-x-1/2 -translate-y-1/2 rounded-md;
+  background-image: radial-gradient(circle, #b0bec5 1px, transparent 1px);
+  background-size: 6px 6px;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splitter:hover::before,
+.splitter[data-dragging="true"]::before {
+  @apply bg-primary-600;
+}
+
+.splitter:hover::after,
+.splitter[data-dragging="true"]::after {
+  opacity: 1;
+}

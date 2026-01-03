@@ -1,0 +1,14 @@
+{
+  "id": "ae49750d-173a-40ee-ad0c-c3aa82f27a52",
+  "name": null,
+  "resume_file_name": "测试",
+  "job_title": "待设置",
+  "job_company": "待设置",
+  "created_at": "2025-12-31T15:54:40.081985",
+  "updated_at": "2025-12-31T15:54:40.081985",
+  "progress": {
+    "completed": 0,
+    "total": 0
+  },
+  "status": "active"
+}

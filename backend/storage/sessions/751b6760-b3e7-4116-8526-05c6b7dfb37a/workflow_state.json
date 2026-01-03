@@ -1,0 +1,276 @@
+{
+  "session_id": "751b6760-b3e7-4116-8526-05c6b7dfb37a",
+  "resume": {
+    "basics": {
+      "name": "刘锦文",
+      "label": null,
+      "email": "2811455492@qq.com",
+      "phone": "15706668172",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "education",
+        "title": "教育背景",
+        "type": "generic",
+        "items": [
+          {
+            "id": "edu1",
+            "title": "中国农业大学 (985)",
+            "subtitle": "计算机技术 (硕士)",
+            "date": "2024-09 ~ 至今",
+            "description": "主修课程：机器学习，深度学习，模式识别，数据挖掘，计算机视觉。"
+          },
+          {
+            "id": "edu2",
+            "title": "东北电力大学",
+            "subtitle": "软件工程 (本科)",
+            "date": "2020-09 ~ 2024-06",
+            "description": "专业成绩：GPA 3.66/4（专业前5%）\n主修课程：数据结构，算法设计，C，Python，JAVA，软件工程，数据库原理，操作系统，编译原理。"
+          }
+        ]
+      },
+      {
+        "id": "experience",
+        "title": "实习经历",
+        "type": "experience",
+        "items": [
+          {
+            "id": "exp1",
+            "title": "大模型应用工程师",
+            "organization": "北京理想汽车科技有限公司",
+            "date_start": "2025-08",
+            "date_end": "至今",
+            "location": null,
+            "highlights": [
+              "车辆电控配置excel表问答助手(独立负责)\n项目目标：解决算法部门在进行多表检索难的问题\n- 设计并实现“自然语言→SQL→只读结果”的问答服务，Excel 数据拆解落库至 SQLite，结构化返回结论与结果集，满足≤60s 响应 SLA。\n- 设计三类 Chroma 知识库 (DDL/Q→SQL/数据库描述)，提升SQL 生成的相关性\n- 设计 SQL Agent，采用React范式设计，设计了SQL错误自纠正，保证SQL生成的稳定性\n- 接口使用 FastAPI 进行封装，便于运维团队处理。\n- 通过环境变量抽象 LLM（OpenAI 兼容）与库路径，支持跨环境快速切换与配置管理，保障工程落地与维护效率。",
+              "自动化测试用例助手 (独立负责)\n项目目标：应用工作流解决 QA 团队痛点，即根据PRD人工编写测试用例耗时长且MC/DC覆盖率难以保证的问题。\n解决策略\n1、通过任务拆解（Task Decomposition）和思维链（CoT）引导，提升输出质量；\n2、结果强制按JSON Schema输出，保证输出稳定性，提升下一步大模型的理解能力；\n3、领域知识注入，注入等价类划分、边界值分析 (BVA) 和 MC/DC（修正条件/判定覆盖）等专业测试方法论的定义、流程与约束，确保每个独立条件都对总体判定结果的影响都被独立验证；\n4、引入人在环中，便于测试人员编辑确认生成脑图；\n5、xml结构化提示词，便于大模型理解。\n结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作，配套的测试脑图能直观展现测试逻辑，方便测试人员核验 MC/DC 覆盖率的完整性。"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "project",
+        "title": "项目经验",
+        "type": "generic",
+        "items": [
+          {
+            "id": "proj1",
+            "title": "DeepResearch Agent",
+            "subtitle": "全部",
+            "date": "2025-10 ~ 2025-10",
+            "description": "项目目标：解决 Agent 在执行长周期、复杂研究任务时的核心痛点，即：1) 缺乏持久化规划导致“任务漂移”；2) 单一Agent 架构容易上下文膨胀。\n\n解决策略：\n1. 设计“先规划后执行”机制：通过自定义 State（包含 todo 列表）并结合“工具状态注入”（write/read_todo 工具），强制 Agent 在执行前进行任务分解，实现任务规划的持久化，提高LLM执行质量。\n2. 实现“上下文卸载”：设计 write_file 和 read_file 工具，允许 Agent 将长篇研究内容或历史记录卸载到状态（内存）中，仅在消息记录中保留文件名和结构化摘要，突破 LLM 上下文限制。\n3. 构建多 Agent 架构：引入 Task（任务分派）工具，主 Agent 通过调用该工具来委派子 Agent，子agent上下文与主agent隔离，解决单agent工作上下文膨胀的问题。\n4. 引入“强制思考”（Forced Thinking）：设计 think 工具，强制 Agent 在搜索完毕、子任务完成等关键行动前进行显式分析（类 CoT），提高决策质量和系统可控性。\n\n结果：构建了一个支持持久化规划和上下文卸载的多 Agent 系统，显著提升了 AI Agent 执行长周期、复杂研究任务的稳定性、深度与可控性。"
+          }
+        ]
+      },
+      {
+        "id": "skills",
+        "title": "技能特长",
+        "type": "generic",
+        "items": [
+          {
+            "id": "skill1",
+            "title": "熟悉agent和工作流框架",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于langgraph, langchain, llamalindex等"
+          },
+          {
+            "id": "skill2",
+            "title": "熟悉提示词工程",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于CoT，agent定义，Multi Step，xml结构化提示词，角色定义，JSON化结果等等"
+          },
+          {
+            "id": "skill3",
+            "title": "熟悉使用Rag",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于Advanced RAG（前后处理），Agentic RAG等等"
+          },
+          {
+            "id": "skill4",
+            "title": "有丰富的大型模型使用经验",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于Claude Haiku4.5，Sonnet 4，GPT 5，Gemini 2.5pro，GLM4.6，Deepseek v3.1，Kimi k2等等"
+          },
+          {
+            "id": "skill5",
+            "title": "熟悉python后端接口框架Fastapi",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill6",
+            "title": "熟悉工具封装和MCP",
+            "subtitle": null,
+            "date": null,
+            "description": "能指挥大模型进行封装"
+          },
+          {
+            "id": "skill7",
+            "title": "熟悉vibe coding",
+            "subtitle": null,
+            "date": null,
+            "description": "能指挥ai生成满足要求的前后端demo（如小程序）"
+          },
+          {
+            "id": "skill8",
+            "title": "熟悉python的面向对象设计",
+            "subtitle": null,
+            "date": null,
+            "description": "异常处理，异步编程等"
+          },
+          {
+            "id": "skill9",
+            "title": "熟悉数据结构和基础算法",
+            "subtitle": null,
+            "date": null,
+            "description": "包括但不限于哈希表，链表，队列，树，图，贪心，分治，动态规划等"
+          },
+          {
+            "id": "skill10",
+            "title": "熟悉源代码部署各种GitHub项目",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill11",
+            "title": "熟悉linux操作环境",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "skill12",
+            "title": "了解LLM原理，NLP相关知识",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          }
+        ]
+      },
+      {
+        "id": "awards",
+        "title": "荣誉证书",
+        "type": "generic",
+        "items": [
+          {
+            "id": "award1",
+            "title": "考研分数372",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award2",
+            "title": "英语六级530",
+            "subtitle": "听说读写能力良好，能浏览英文文档和书籍",
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award3",
+            "title": "PAT甲级90",
+            "subtitle": "（满分100）",
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award4",
+            "title": "蓝桥杯省赛一等奖",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award5",
+            "title": "校级一等奖学金",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          },
+          {
+            "id": "award6",
+            "title": "专利一篇",
+            "subtitle": null,
+            "date": null,
+            "description": null
+          }
+        ]
+      }
+    ]
+  },
+  "user_intent": "你好\n",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "求职意向（缺失）",
+        "original_text": "在原始简历中未明确找到求职意向模块。",
+        "diagnosis": "简历缺乏清晰、明确的求职意向表述。虽然提供了求职意图，但简历内容未直接体现，这会让招聘者难以快速定位你的职业方向和目标岗位，降低了简历的针对性和吸引力。",
+        "goal": "在简历的显眼位置（如页眉或摘要区）增加“求职意向”模块，清晰陈述目标职位和期望领域，例如“大模型/Agent应用开发工程师”。"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "关键技能呈现",
+        "original_text": "技能特长列表项（例如：熟悉agent和工作流框架、熟悉提示词工程等）",
+        "diagnosis": "技能列表过于庞杂和分散，缺乏精炼和侧重点。条目标题以“熟悉”开头较为模糊，未能体现掌握深度和技术栈的层次性，且与求职意图（假设为大模型/AI工程方向）相关的核心技能未得到突出体现。",
+        "goal": "重组技能板块，将技能分为“核心能力”、“技术栈”等子类。用更专业的动词描述（如“精通”、“熟练应用”、“具备...项目实战经验”）。重点突出与大模型应用、Agent开发、RAG、Prompt Engineering等直接相关的能力，适当弱化或整合其他通用技能（如Linux、部署）。"
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "实习经历 - 车辆电控配置excel表问答助手",
+        "original_text": "车辆电控配置excel表问答助手... - 设计并实现“自然语言→SQL→只读结果”的问答服务... - 设计三类 Chroma 知识库... - 设计 SQL Agent... - 接口使用 FastAPI 进行封装... - 通过环境变量抽象...",
+        "diagnosis": "经历描述侧重于技术实现和流程，但缺少量化结果和业务价值体现。例如，解决了“多表检索难”的问题，但未说明在效率、准确性或成本上的提升程度。成果表述不够直观、有力。",
+        "goal": "采用STAR原则重写此项目经历，特别是强调“结果（Result）”。使用量化指标说明成效，例如：将多表检索平均耗时从原来的X分钟降低至60秒内；系统上线后，算法部门查询效率提升Y%；生成的SQL语句准确率达到Z%。"
+      },
+      {
+        "id": 4,
+        "status": "pending",
+        "section": "实习经历 - 自动化测试用例助手",
+        "original_text": "自动化测试用例助手... 解决策略 1、通过任务拆解（Task Decomposition）和思维链（CoT）引导... 2、结果强制按JSON Schema输出... 3、领域知识注入... 4、引入人在环中... 5、xml结构化提示词... 结果：成功交付了稳定的Demo。输出的测试用例表格显著减轻了QA团队手写用例的繁琐工作...",
+        "diagnosis": "描述罗列了技术手段，但“结果”部分过于定性化（“显著减轻”、“直观展现”），缺乏可衡量的数据和影响力证明。对于大模型应用工程师岗位，应突出AI方法如何有效提升了传统工作的效能。",
+        "goal": "重写结果部分，添加量化指标。例如：“单次生成可覆盖80%的基础测试用例，人工编写时间减少70%”，“生成的脑图可清晰展示超过95%的MC/DC覆盖路径，便于QA团队快速验证和补充”。"
+      },
+      {
+        "id": 5,
+        "status": "pending",
+        "section": "项目经验 - DeepResearch Agent",
+        "original_text": "DeepResearch Agent... 项目目标：解决Agent在执行长周期、复杂研究任务时的核心痛点... 解决策略：1. 设计“先规划后执行”机制... 2. 实现“上下文卸载”... 3. 构建多 Agent 架构... 4. 引入“强制思考”... 结果：构建了一个支持持久化规划和上下文卸载的多Agent系统，显著提升了AI Agent执行长周期、复杂研究任务的稳定性、深度与可控性。",
+        "diagnosis": "描述较为详细，但结果部分仍然是定性的形容（“显著提升”），缺乏量化或具有说服力的证据。此外，项目标题为“全部”，日期仅一个月，需要更明确的项目性质（如个人项目、课程项目或开源项目），以增加可信度。",
+        "goal": "明确项目性质与定位。在结果部分增加可衡量的成效或测试数据（如：对比单一Agent，其处理文档字数上限提升X倍；在Y项特定研究任务中，规划准确率提升Z%）。突出该项目的技术复杂度和个人贡献。"
+      },
+      {
+        "id": 6,
+        "status": "pending",
+        "section": "荣誉证书",
+        "original_text": "考研分数372、英语六级530、PAT甲级90、蓝桥杯省赛一等奖、校级一等奖学金、专利一篇",
+        "diagnosis": "荣誉证书列表简单罗列，信息不完整。例如“专利一篇”未说明专利类型、名称和状态；“考研分数”对于硕士在读求职者来说，相关性稍弱；“PAT甲级90”含金量高但未突出。整体板块显得臃肿且重点不突出。",
+        "goal": "精简荣誉证书板块。将“考研分数”和“六级”等移至“其他信息”或整合到教育背景中。为高价值荣誉补充简要说明（如：蓝桥杯获奖比例、专利的名称与角色）。重点突出最能体现技术能力和潜力的奖项。"
+      },
+      {
+        "id": 7,
+        "status": "pending",
+        "section": "整体简历结构与排版",
+        "original_text": "整个简历的JSON结构，包括基础信息、教育背景、实习经历、项目经验、技能特长、荣誉证书的排列。",
+        "diagnosis": "简历结构基本合理，但内容详略不当。实习和项目经历描述详尽但结果不量化，技能和荣誉板块信息繁杂且重点不突出。缺乏“个人总结”或“专业摘要”来统领全篇，直接针对求职意向进行个人亮点提炼。",
+        "goal": "审视并优化简历整体结构。建议在基本信息后、教育背景前增加“个人总结/专业摘要”部分，用3-4句话概括个人在大模型/AI应用领域的核心优势、主要成就和求职意向。调整各板块顺序，将“实习经历”和“项目经验”合并或明确区分，以时间倒序或重要性顺序排列。"
+      }
+    ]
+  },
+  "current_stage": "init",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {},
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

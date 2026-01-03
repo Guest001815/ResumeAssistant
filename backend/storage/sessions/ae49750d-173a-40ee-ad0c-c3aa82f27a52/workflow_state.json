@@ -1,0 +1,29 @@
+{
+  "session_id": "ae49750d-173a-40ee-ad0c-c3aa82f27a52",
+  "resume": {
+    "basics": {
+      "name": "测试",
+      "label": null,
+      "email": "test@test.com",
+      "phone": "123",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "edu",
+        "title": "教育",
+        "type": "generic",
+        "items": []
+      }
+    ]
+  },
+  "user_intent": null,
+  "plan": null,
+  "current_stage": "init",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {},
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

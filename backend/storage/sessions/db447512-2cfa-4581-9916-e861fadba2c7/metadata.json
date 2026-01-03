@@ -1,0 +1,14 @@
+{
+  "id": "db447512-2cfa-4581-9916-e861fadba2c7",
+  "name": null,
+  "resume_file_name": "测试",
+  "job_title": "待设置",
+  "job_company": "待设置",
+  "created_at": "2025-12-31T15:54:42.123734",
+  "updated_at": "2025-12-31T15:54:42.123734",
+  "progress": {
+    "completed": 0,
+    "total": 0
+  },
+  "status": "active"
+}

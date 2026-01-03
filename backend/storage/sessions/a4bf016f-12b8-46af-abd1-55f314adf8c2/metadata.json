@@ -1,0 +1,14 @@
+{
+  "id": "a4bf016f-12b8-46af-abd1-55f314adf8c2",
+  "name": null,
+  "resume_file_name": "测试用户",
+  "job_title": "待设置",
+  "job_company": "待设置",
+  "created_at": "2025-12-31T15:54:10.700142",
+  "updated_at": "2025-12-31T15:54:10.700142",
+  "progress": {
+    "completed": 0,
+    "total": 0
+  },
+  "status": "active"
+}

@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "id": "be092a414817ff76",
+    "name": "Test User",
+    "label": "",
+    "created_at": "2026-01-02T20:09:51.434211",
+    "updated_at": "2026-01-02T20:09:51.437308"
+  },
+  "resume": {
+    "basics": {
+      "name": "Test User",
+      "label": null,
+      "email": "test@example.com",
+      "phone": "1234567890",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "exp-1",
+        "title": "Work Experience",
+        "type": "experience",
+        "items": [
+          {
+            "id": "item-1",
+            "title": "Software Engineer",
+            "organization": "Tech Corp",
+            "date_start": "2020-01",
+            "date_end": "2023-01",
+            "location": null,
+            "highlights": [
+              "Developed cool features",
+              "Fixed bugs"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
