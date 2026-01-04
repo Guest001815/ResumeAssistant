@@ -1,0 +1,76 @@
+{
+  "session_id": "4342f8ac-fe9b-471f-896c-9f44f6c0c0d0",
+  "resume": {
+    "basics": {
+      "name": "回溯测试",
+      "label": null,
+      "email": "backtrack@test.com",
+      "phone": null,
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "s1",
+        "title": "教育背景",
+        "type": "text",
+        "content": "本科计算机"
+      },
+      {
+        "id": "s2",
+        "title": "工作经历",
+        "type": "text",
+        "content": "Python开发"
+      },
+      {
+        "id": "s3",
+        "title": "技能特长",
+        "type": "text",
+        "content": "Python, Django"
+      }
+    ]
+  },
+  "user_intent": "全面优化简历",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "in_progress",
+        "section": "教育背景",
+        "strategy": "KEYWORD_FILTER",
+        "original_text": "本科计算机",
+        "diagnosis": "描述过于简单，仅提及专业而未展示学校、学位、时间、GPA或相关课程。对于求职，需要更完整和吸引人的教育信息。",
+        "goal": "引导用户补充教育背景的详细信息，包括：学校名称、学位、就读时间、GPA（如优秀）、相关课程（特别是与Python开发/Django相关的课程）、荣誉奖项等。",
+        "item_id": null
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "工作经历",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "Python开发",
+        "diagnosis": "描述极简，仅包含职位名称。缺乏任何具体的工作职责、项目和成果（量化数据）。无法体现实际能力、经验深度和价值。",
+        "goal": "引导用户详细挖掘其Python开发工作经历：使用STAR法则，补充公司名称、任职时间、实际工作职责、具体负责的项目、使用的技术栈（如Django）、项目成果（如功能实现、效率提升、代码优化等量化数据，或学习/培训项目中的技术实践与收获）。",
+        "item_id": null
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "技能特长",
+        "strategy": "KEYWORD_FILTER",
+        "original_text": "Python, Django",
+        "diagnosis": "技能列表过短，仅提到Python和Django，对于Python开发岗位而言，缺少对后端开发、数据库、前端、测试、部署等相关技能及熟练度的描述，显得技能栈单薄且不具竞争力。",
+        "goal": "引导用户扩展和完善技能特长模块：补充Python相关的框架（如Flask）、数据库（如MySQL, PostgreSQL, Redis）、前端技术（如HTML/CSS/JS基础）、测试框架（如Pytest）、版本控制工具（如Git）、以及部署/云服务（如Docker, Linux, AWS/Ali Cloud）等技能，并可根据自身情况注明熟练度。",
+        "item_id": null
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

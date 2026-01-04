@@ -135,6 +135,110 @@ class WorkflowState(BaseModel):
             return []
         return [t.section for t in self.plan.tasks if t.status == TaskStatus.SKIPPED]
     
+    def get_completed_task_names(self) -> List[str]:
+        """获取所有已完成的任务名称（用于回溯识别）"""
+        if not self.plan:
+            return []
+        return [t.section for t in self.plan.tasks if t.status == TaskStatus.COMPLETED]
+    
+    def get_last_completed_task(self) -> Optional[Task]:
+        """
+        获取最后一个完成的任务（用于智能回溯默认目标）
+        
+        当用户表达不满意但没有指明具体任务时，默认回溯到这个任务。
+        
+        Returns:
+            最后一个 COMPLETED 状态的任务，如果没有则返回 None
+        """
+        if not self.plan:
+            return None
+        
+        # 从后往前查找最后一个已完成的任务
+        for task in reversed(self.plan.tasks):
+            if task.status == TaskStatus.COMPLETED:
+                return task
+        return None
+    
+    def get_last_completed_task_idx(self) -> Optional[int]:
+        """
+        获取最后一个完成任务的索引
+        
+        Returns:
+            最后一个 COMPLETED 状态任务的索引，如果没有则返回 None
+        """
+        if not self.plan:
+            return None
+        
+        for idx in range(len(self.plan.tasks) - 1, -1, -1):
+            if self.plan.tasks[idx].status == TaskStatus.COMPLETED:
+                return idx
+        return None
+    
+    def switch_to_task(self, target_section: str) -> Optional[int]:
+        """
+        切换到指定任务（用于智能回溯修改）
+        
+        Args:
+            target_section: 目标任务的板块名称（部分匹配即可）
+            
+        Returns:
+            目标任务的索引，如果未找到返回 None
+        """
+        if not self.plan:
+            return None
+        
+        # 查找匹配的任务（支持部分匹配）
+        target_idx = None
+        for idx, task in enumerate(self.plan.tasks):
+            # 检查板块名称是否包含目标关键词
+            if target_section in task.section or task.section in target_section:
+                target_idx = idx
+                break
+        
+        if target_idx is None:
+            # 尝试更宽松的匹配（关键词匹配）
+            target_lower = target_section.lower()
+            for idx, task in enumerate(self.plan.tasks):
+                section_lower = task.section.lower()
+                # 检查是否有共同关键词
+                if any(keyword in section_lower for keyword in target_lower.split()):
+                    target_idx = idx
+                    break
+        
+        if target_idx is not None:
+            # 切换到目标任务
+            self.current_task_idx = target_idx
+            # 将任务状态改为进行中
+            self.plan.tasks[target_idx].status = TaskStatus.IN_PROGRESS
+            # 清除当前执行文档
+            self.current_exec_doc = None
+            # 清除 Guide Agent 状态，重新开始该任务的对话
+            self.agent_states.pop("guide", None)
+            # 更新工作流阶段
+            self.current_stage = WorkflowStage.GUIDING
+            
+            return target_idx
+        
+        return None
+    
+    def find_task_by_section(self, target_section: str) -> Optional[Task]:
+        """
+        根据板块名称查找任务
+        
+        Args:
+            target_section: 目标任务的板块名称
+            
+        Returns:
+            匹配的任务，如果未找到返回 None
+        """
+        if not self.plan:
+            return None
+        
+        for task in self.plan.tasks:
+            if target_section in task.section or task.section in target_section:
+                return task
+        return None
+    
     # ==================== Agent 状态管理 ====================
     
     def save_agent_state(self, agent_name: str, state: Dict[str, Any]) -> None:

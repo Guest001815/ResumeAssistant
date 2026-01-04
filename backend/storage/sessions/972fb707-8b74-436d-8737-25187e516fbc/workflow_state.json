@@ -1,0 +1,70 @@
+{
+  "session_id": "972fb707-8b74-436d-8737-25187e516fbc",
+  "resume": {
+    "basics": {
+      "name": "跳过测试",
+      "label": null,
+      "email": "skip@test.com",
+      "phone": null,
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "s1",
+        "title": "教育",
+        "type": "text",
+        "content": "本科"
+      },
+      {
+        "id": "s2",
+        "title": "工作",
+        "type": "text",
+        "content": "开发"
+      }
+    ]
+  },
+  "user_intent": "优化",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "教育",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "本科",
+        "diagnosis": "教育背景描述过于简略，无法体现专业、学校、时间、GPA或核心课程等关键信息，对于简历的完整性和竞争力有重大影响。",
+        "goal": "优化教育背景模块：补充学校名称、专业、就读时间，如有高GPA或相关荣誉可突出；针对【优化】这一宽泛意图，建议用户明确目标岗位后，可进一步强调与目标岗位相关的课程或学术项目。",
+        "item_id": "s1"
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "工作",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "开发",
+        "diagnosis": "工作经历描述极其模糊，仅有一个职位名称，完全没有体现具体公司、时间、职责、项目、技术栈和任何量化成果，是简历的致命弱点。",
+        "goal": "针对【优化】意图，深度重塑工作经历模块：需补充公司名称、在职时间、具体职责和参与的项目；根据STAR法则，引导用户挖掘项目中的挑战、行动和成果（如有真实项目数据可补充，如为学习项目则强调技术实现和收获）。",
+        "item_id": "s2"
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "技能特长",
+        "strategy": "KEYWORD_FILTER",
+        "original_text": "（简历中缺失技能模块）",
+        "diagnosis": "原始简历中缺乏技能模块，这无法向招聘方展示个人的技术能力、工具熟练度等硬技能，严重影响简历的筛选通过率。",
+        "goal": "新建技能模块：引导用户梳理其技术栈（如编程语言、框架、工具、软技能），并根据其【优化】意图（待明确具体岗位方向）进行针对性筛选和排序，突出核心竞争力。",
+        "item_id": null
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

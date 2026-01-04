@@ -150,6 +150,13 @@ class GuideRequest(BaseModel):
     user_input: str
 
 
+class LocationInfo(BaseModel):
+    """草稿位置信息"""
+    section: str  # 板块名称，如"教育背景"
+    item_title: Optional[str] = None  # 具体条目标题，如"中国农业大学 (985)"
+    sub_section: Optional[str] = None  # 子板块，如"硕士"（教育背景特有）
+
+
 class GuideResponse(BaseModel):
     thought: str
     reply: str
@@ -158,6 +165,11 @@ class GuideResponse(BaseModel):
     execution_doc: Optional[ExecutionDoc] = None
     is_confirming: bool = False
     is_finished: bool = False
+    # 智能任务回溯字段
+    switch_to_task: Optional[int] = None  # 如果需要切换任务，返回目标任务索引
+    switch_to_section: Optional[str] = None  # 目标任务的板块名称
+    # 草稿位置信息
+    location_info: Optional[LocationInfo] = None
 
 
 class ProgressResponse(BaseModel):
@@ -419,6 +431,48 @@ async def generate_plan_stream(session_id: str, req: PlanRequest):
     )
 
 
+def extract_location_info(task: Task) -> LocationInfo:
+    """
+    从 Task 的 section 字段提取位置信息
+    
+    示例：
+    - "教育背景" → LocationInfo(section="教育背景")
+    - "教育背景 - 中国农业大学 (985)" → LocationInfo(section="教育背景", item_title="中国农业大学 (985)")
+    - "教育背景 - 硕士课程" → LocationInfo(section="教育背景", sub_section="硕士")
+    """
+    section_text = task.section
+    
+    # 分割 section，可能的格式：
+    # "板块"
+    # "板块 - 条目"
+    # "板块 - 学历阶段课程"
+    parts = [p.strip() for p in section_text.split('-')]
+    
+    section = parts[0]
+    item_title = None
+    sub_section = None
+    
+    if len(parts) > 1:
+        second_part = parts[1]
+        
+        # 检查是否是学历阶段（硕士/本科）
+        if "硕士" in second_part or "本科" in second_part:
+            # 提取学历阶段
+            if "硕士" in second_part:
+                sub_section = "硕士"
+            elif "本科" in second_part:
+                sub_section = "本科"
+        else:
+            # 是具体条目
+            item_title = second_part
+    
+    return LocationInfo(
+        section=section,
+        item_title=item_title,
+        sub_section=sub_section
+    )
+
+
 @app.post("/session/{session_id}/guide/init", response_model=GuideResponse)
 async def guide_init(session_id: str):
     """
@@ -487,7 +541,8 @@ async def guide_init(session_id: str):
             draft=None,  # 开场白不包含草稿
             execution_doc=None,
             is_confirming=False,
-            is_finished=False
+            is_finished=False,
+            location_info=extract_location_info(current_task)
         )
         
     except HTTPException:
@@ -549,8 +604,24 @@ async def guide_step(session_id: str, req: GuideRequest):
             if msg.type == "info" and "草稿预览" in str(msg.content):
                 draft = str(msg.content).replace("草稿预览:\n", "")
         
+        # 🔄 处理任务切换（智能回溯）
+        switch_to_task_idx = None
+        switch_to_section = None
+        if output.action == AgentAction.SWITCH_TASK and output.target_section:
+            target_section = output.target_section
+            logger.info(f"🔄 处理任务切换请求，目标板块: {target_section}")
+            
+            # 调用 switch_to_task 方法进行任务切换
+            new_task_idx = state.switch_to_task(target_section)
+            if new_task_idx is not None:
+                switch_to_task_idx = new_task_idx
+                switch_to_section = state.plan.tasks[new_task_idx].section
+                logger.info(f"✅ 成功切换到任务 {new_task_idx}: {switch_to_section}")
+            else:
+                logger.warning(f"⚠️ 未找到匹配的任务: {target_section}")
+        
         # ✅ 关键修复：同步状态到 WorkflowState（与 orchestrator 保持一致）
-        if output.action == AgentAction.REQUEST_CONFIRM:
+        elif output.action == AgentAction.REQUEST_CONFIRM:
             state.current_stage = WorkflowStage.CONFIRMING
             if isinstance(output.content, ExecutionDoc):
                 state.current_exec_doc = output.content
@@ -562,8 +633,9 @@ async def guide_step(session_id: str, req: GuideRequest):
             if isinstance(output.content, ExecutionDoc):
                 state.current_exec_doc = output.content
                 logger.info(f"✅ ExecutionDoc已保存到state（HANDOFF）: operation={output.content.operation}, section={output.content.section_title}")
-        # ✅ 新增：有草稿时允许直接确认（无需等待 REQUEST_CONFIRM）
-        elif draft and not state.current_exec_doc:
+        
+        # ✅ 关键修复：有草稿时始终更新 execution_doc（支持用户修改草稿后重新确认）
+        if draft:
             # 尝试从 agent 获取或构建 execution_doc
             if hasattr(agent, '_agent') and agent._agent:
                 if agent._agent.execution_doc:
@@ -571,22 +643,19 @@ async def guide_step(session_id: str, req: GuideRequest):
                     state.current_stage = WorkflowStage.CONFIRMING
                     logger.info(f"✅ 从agent获取ExecutionDoc: operation={state.current_exec_doc.operation}")
                 elif agent._agent.draft:
-                    # 构建执行文档
+                    # 构建执行文档（每次有新草稿时都更新）
                     state.current_exec_doc = agent._agent._build_execution_doc()
                     state.current_stage = WorkflowStage.CONFIRMING
-                    logger.info(f"✅ 草稿已生成，预构建ExecutionDoc: operation={state.current_exec_doc.operation}")
+                    logger.info(f"✅ 草稿已生成/更新，构建ExecutionDoc: operation={state.current_exec_doc.operation}")
         
         # ✅ 保存状态到磁盘（包含新的 current_exec_doc）
         workflow_manager.save(state)
         logger.info(f"✅ WorkflowState已保存，current_exec_doc: {state.current_exec_doc is not None}")
         
         # 处理输出
-        # 使用双重检查：优先使用 state.current_stage，同时检查 output.action 和草稿存在
-        is_confirming = (
-            state.current_stage == WorkflowStage.CONFIRMING or 
-            output.action == AgentAction.REQUEST_CONFIRM or
-            draft is not None  # 有草稿时也允许确认
-        )
+        # 只有在 LLM 明确请求确认时，才设置 is_confirming 为 True
+        # 这样用户在看到草稿后仍可继续在输入框中提出修改意见
+        is_confirming = output.action == AgentAction.REQUEST_CONFIRM
         is_finished = output.action == AgentAction.HANDOFF and output.next_agent == "editor"
         
         # 安全地获取reply内容（查找type="answer"的消息）
@@ -615,7 +684,10 @@ async def guide_step(session_id: str, req: GuideRequest):
             draft=draft,
             execution_doc=output.content if isinstance(output.content, ExecutionDoc) else None,
             is_confirming=is_confirming,
-            is_finished=is_finished
+            is_finished=is_finished,
+            switch_to_task=switch_to_task_idx,
+            switch_to_section=switch_to_section,
+            location_info=extract_location_info(current_task) if draft else None  # 只在有草稿时提供位置信息
         )
         
     except HTTPException:
@@ -693,6 +765,59 @@ async def skip_task(session_id: str):
         "success": True,
         "message": result.content,
         "next_task": next_task.model_dump() if next_task else None
+    }
+
+
+class BacktrackRequest(BaseModel):
+    """回溯请求"""
+    target_section: Optional[str] = None  # 目标板块名称，为空则回溯到最后完成的任务
+
+
+@app.post("/session/{session_id}/backtrack")
+async def backtrack_task(session_id: str, req: BacktrackRequest = None):
+    """
+    回溯到指定任务或最后完成的任务
+    
+    用于：
+    1. 用户点击"返回修改"按钮时
+    2. 用户想要修改之前已完成的任务
+    
+    如果 target_section 为空，则默认回溯到最后一个完成的任务。
+    """
+    logger.info(f"收到请求 /session/{session_id}/backtrack, target_section={req.target_section if req else None}")
+    
+    state = workflow_manager.get(session_id)
+    if not state:
+        raise HTTPException(status_code=404, detail="会话不存在")
+    
+    target_section = req.target_section if req else None
+    
+    # 如果没有指定目标，回溯到最后完成的任务
+    if not target_section:
+        last_completed = state.get_last_completed_task()
+        if not last_completed:
+            raise HTTPException(status_code=400, detail="没有已完成的任务可以回溯")
+        target_section = last_completed.section
+        logger.info(f"未指定目标，回溯到最后完成的任务: {target_section}")
+    
+    # 执行任务切换
+    new_task_idx = state.switch_to_task(target_section)
+    if new_task_idx is None:
+        raise HTTPException(status_code=400, detail=f"未找到匹配的任务: {target_section}")
+    
+    # 保存状态
+    workflow_manager.save(state)
+    
+    # 获取切换后的任务
+    current_task = state.get_current_task()
+    
+    logger.info(f"✅ 成功回溯到任务 {new_task_idx}: {current_task.section}")
+    
+    return {
+        "success": True,
+        "message": f"已回溯到任务：{current_task.section}",
+        "task_idx": new_task_idx,
+        "task": current_task.model_dump() if current_task else None
     }
 
 

@@ -19,6 +19,7 @@ class AgentAction(str, Enum):
     WAIT_INPUT = "wait_input"       # 等待用户输入
     REQUEST_CONFIRM = "request_confirm"  # 等待用户确认（显示确认按钮）
     FINISH = "finish"               # 完成任务
+    SWITCH_TASK = "switch_task"     # 切换到历史任务（用于回溯修改）
 
 
 class AgentMessage(BaseModel):
@@ -51,6 +52,9 @@ class AgentOutput(BaseModel):
     content: Any = Field(None, description="输出内容")
     next_agent: Optional[str] = Field(None, description="切换目标 Agent（当 action=HANDOFF 时）")
     messages: List[AgentMessage] = Field(default_factory=list, description="过程中产生的消息")
+    # 任务切换字段（当 action=SWITCH_TASK 时使用）
+    target_task_idx: Optional[int] = Field(None, description="目标任务索引（当 action=SWITCH_TASK 时）")
+    target_section: Optional[str] = Field(None, description="目标任务板块名称（当 action=SWITCH_TASK 时）")
 
 
 class BaseAgent(ABC):

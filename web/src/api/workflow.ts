@@ -80,6 +80,12 @@ export interface ExecutionDoc {
   reason: string;
 }
 
+export interface LocationInfo {
+  section: string;  // 板块名称，如"教育背景"
+  item_title?: string;  // 具体条目标题，如"中国农业大学 (985)"
+  sub_section?: string;  // 子板块，如"硕士"
+}
+
 export interface GuideResponse {
   thought: string;
   reply: string;
@@ -88,6 +94,11 @@ export interface GuideResponse {
   execution_doc?: ExecutionDoc;
   is_confirming: boolean;
   is_finished: boolean;
+  // 智能任务回溯字段
+  switch_to_task?: number;  // 如果需要切换任务，返回目标任务索引
+  switch_to_section?: string;  // 目标任务的板块名称
+  // 草稿位置信息
+  location_info?: LocationInfo;
 }
 
 export interface ProgressResponse {
@@ -444,6 +455,34 @@ export async function skipTask(sessionId: string): Promise<{
 
   if (!response.ok) {
     throw new Error(`跳过任务失败: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+/**
+ * 回溯到指定任务或最后完成的任务
+ * 
+ * @param sessionId 会话ID
+ * @param targetSection 目标板块名称（可选），为空则回溯到最后完成的任务
+ */
+export async function backtrackTask(sessionId: string, targetSection?: string): Promise<{
+  success: boolean;
+  message: string;
+  task_idx: number;
+  task?: Task;
+}> {
+  const response = await fetch(`${API_BASE}/session/${sessionId}/backtrack`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ target_section: targetSection || null }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: '回溯失败' }));
+    throw new Error(error.detail || `回溯失败: ${response.status}`);
   }
 
   return await response.json();

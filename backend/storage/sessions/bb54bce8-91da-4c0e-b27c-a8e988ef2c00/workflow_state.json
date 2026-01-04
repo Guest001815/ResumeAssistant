@@ -1,0 +1,60 @@
+{
+  "session_id": "bb54bce8-91da-4c0e-b27c-a8e988ef2c00",
+  "resume": {
+    "basics": {
+      "name": "多任务测试",
+      "label": null,
+      "email": "multitask@test.com",
+      "phone": null,
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "s1",
+        "title": "教育",
+        "type": "text",
+        "content": "本科"
+      },
+      {
+        "id": "s2",
+        "title": "工作",
+        "type": "text",
+        "content": "开发"
+      }
+    ]
+  },
+  "user_intent": "全面优化简历",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "pending",
+        "section": "教育",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "本科",
+        "diagnosis": "描述过于简单，仅有学历层级，缺少学校、专业、时间、相关课程或成就等关键信息，无法支撑任何专业领域的求职意图。",
+        "goal": "根据求职意图（需明确）补充详细信息：如学校、专业、毕业时间、GPA（如优秀）、核心课程（针对技术岗列举相关课程）或学术荣誉。",
+        "item_id": null
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "工作",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "开发",
+        "diagnosis": "描述极其模糊，仅有职能称谓，缺少公司、时间、职位、具体工作内容、使用的技术栈以及任何量化成果。完全无法评估其专业能力和经验价值。",
+        "goal": "针对【求职意向待定】进行大幅扩充：采用STAR法则，补充公司名称、任职时间、具体职位，详细描述工作职责、使用的核心技术、解决的业务问题，并根据项目性质优化：如是真实项目，补充量化成果（如效率提升、处理数据量等）；如是学习项目，强调技术实现和收获。",
+        "item_id": null
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

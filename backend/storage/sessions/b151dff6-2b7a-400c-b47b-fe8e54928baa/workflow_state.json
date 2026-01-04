@@ -1,0 +1,76 @@
+{
+  "session_id": "b151dff6-2b7a-400c-b47b-fe8e54928baa",
+  "resume": {
+    "basics": {
+      "name": "回溯测试",
+      "label": null,
+      "email": "backtrack@test.com",
+      "phone": null,
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "s1",
+        "title": "教育背景",
+        "type": "text",
+        "content": "本科计算机"
+      },
+      {
+        "id": "s2",
+        "title": "工作经历",
+        "type": "text",
+        "content": "Python开发"
+      },
+      {
+        "id": "s3",
+        "title": "技能特长",
+        "type": "text",
+        "content": "Python, Django"
+      }
+    ]
+  },
+  "user_intent": "全面优化简历",
+  "plan": {
+    "tasks": [
+      {
+        "id": 1,
+        "status": "in_progress",
+        "section": "教育背景",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "本科计算机",
+        "diagnosis": "这是简历最前端的基础信息，但内容过于简陋，仅“本科计算机”无法提供有效信息，如学校、专业、学历等级、在校时间、GPA/排名、主修课程等均未说明。这与“全面优化简历”的意图严重不符，是简历筛选阶段信息缺失的重大短板。",
+        "goal": "引导用户补充最基础的教育背景信息，包括学校名称（若985/211则对部分企业是加分项）、学位（学士/硕士）、专业全称、就读时间。根据用户情况，可选择性补充GPA/排名（若成绩优异）、主修课程（若与求职方向强相关）、荣誉奖项等，以支撑不同方向的求职意图。",
+        "item_id": null
+      },
+      {
+        "id": 2,
+        "status": "pending",
+        "section": "工作经历",
+        "strategy": "STAR_STORYTELLING",
+        "original_text": "Python开发",
+        "diagnosis": "工作经历模块为简历核心，但现有描述“Python开发”仅为空洞的职位名称。缺少公司名称、任职时间、具体工作内容和职责、项目背景、采用的技术栈、个人贡献、以及最关键的项目成果（量化数据或业务价值）。完全无法体现个人能力和胜任力，几乎无参考价值。",
+        "goal": "针对【Python开发】这一线索，引导用户按照STAR原则重构工作经历。目标是补充公司、时间、具体参与的项目（可展开为多个Task）。每个项目的描述需要包含：项目背景与目标、个人职责（使用了哪些技术，如Django/Flask等）、采取的具体行动、以及最终的业务成果或技术成果（如是真实项目，需引导挖掘量化指标如性能提升、效率优化、业务增长等；如是学习/练手项目，则强调技术实现复杂度与个人收获）。",
+        "item_id": null
+      },
+      {
+        "id": 3,
+        "status": "pending",
+        "section": "技能特长",
+        "strategy": "KEYWORD_FILTER",
+        "original_text": "Python, Django",
+        "diagnosis": "技能列表过于单薄。除Python和Django外，缺乏对一个完整后端开发岗位所需技能的描述。例如，框架层面可能缺少Flask/FastAPI；数据库层面缺少PostgreSQL/MySQL/Redis等；工具层面缺少Git/Docker/Linux；以及其他可能相关的技术栈（如消息队列、Web框架组件）。深度和广度均需评估和补充。",
+        "goal": "为全面优化简历，需引导用户全面审视并扩充技能模块。在保留Python, Django核心技能的基础上，引导用户补充以下至少一个维度的内容：1) 其他Python框架（Flask, FastAPI）；2) 数据库（MySQL, PostgreSQL, Redis, MongoDB）；3) 开发运维工具（Git, Docker, Nginx, CI/CD）；4) 其他重要技能（如数据结构算法、系统设计、测试等）。同时，可考虑根据技能掌握程度（熟悉/了解）进行层次化分类。",
+        "item_id": null
+      }
+    ]
+  },
+  "current_stage": "guiding",
+  "current_task_idx": 0,
+  "current_exec_doc": null,
+  "agent_states": {
+    "plan": {}
+  },
+  "messages": [],
+  "metadata": {},
+  "error_message": null
+}

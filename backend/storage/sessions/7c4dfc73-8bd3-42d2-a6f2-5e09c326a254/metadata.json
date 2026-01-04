@@ -1,0 +1,14 @@
+{
+  "id": "7c4dfc73-8bd3-42d2-a6f2-5e09c326a254",
+  "name": "测试用户 - 优化简历申请Python后端职位 - Python",
+  "resume_file_name": "测试用户",
+  "job_title": "优化简历申请Python后端职位",
+  "job_company": "Python",
+  "created_at": "2026-01-04T09:39:01.076816",
+  "updated_at": "2026-01-04T09:39:50.363541",
+  "progress": {
+    "completed": 0,
+    "total": 1
+  },
+  "status": "active"
+}

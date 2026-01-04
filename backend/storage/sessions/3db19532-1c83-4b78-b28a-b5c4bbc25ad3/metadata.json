@@ -1,0 +1,14 @@
+{
+  "id": "3db19532-1c83-4b78-b28a-b5c4bbc25ad3",
+  "name": "回归测试 - 优化简历",
+  "resume_file_name": "回归测试",
+  "job_title": "优化简历",
+  "job_company": "待定公司",
+  "created_at": "2026-01-04T09:47:01.333902",
+  "updated_at": "2026-01-04T09:47:40.625586",
+  "progress": {
+    "completed": 0,
+    "total": 1
+  },
+  "status": "active"
+}

@@ -8,10 +8,12 @@ import {
   guideStep,
   guideInit,
   confirmAndExecute,
+  backtrackTask,
   createSession,
   generatePlan,
   generatePlanWithProgress,
-  PlanProgressEvent
+  PlanProgressEvent,
+  LocationInfo
 } from "../api/workflow";
 import MarkdownRenderer from "./MarkdownRenderer";
 import TypingIndicator from "./TypingIndicator";
@@ -23,6 +25,9 @@ type Msg = {
   isConfirming?: boolean;
   isTyping?: boolean;  // 是否正在输入中（显示打字动画）
   tempId?: number;     // 临时消息ID，用于后续替换
+  locationInfo?: LocationInfo;  // 草稿位置信息
+  showBacktrackButton?: boolean;  // 是否显示"返回修改"按钮
+  completedTaskSection?: string;  // 刚完成的任务板块名称（用于回溯）
 };
 
 export default function ChatPanel(props: {
@@ -92,15 +97,15 @@ export default function ChatPanel(props: {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (input.trim() && !isLoading && !isExecuting && !needsConfirmation && sessionId) {
+      if (input.trim() && !isLoading && !isExecuting && sessionId) {
         onSubmit(e as unknown as React.FormEvent);
       }
     }
   };
 
-  // 检查最后一条消息是否需要确认（提前定义，供 handleKeyDown 使用）
+  // 检查最后一条消息是否有草稿（用于显示提示文字，但不禁用输入）
   const lastMessage = messages[messages.length - 1];
-  const needsConfirmation = lastMessage?.role === "assistant" && lastMessage?.isConfirming;
+  const hasDraft = lastMessage?.role === "assistant" && lastMessage?.draft;
 
   // 初始化工作流
   useEffect(() => {
@@ -226,10 +231,29 @@ export default function ChatPanel(props: {
         role: "assistant",
         content: response.reply,
         draft: response.draft,
-        isConfirming: response.is_confirming
+        isConfirming: response.is_confirming,
+        locationInfo: response.location_info
       };
 
       setMessages(prev => [...prev, assistantMsg]);
+
+      // 🔄 处理任务切换（智能回溯）
+      if (response.switch_to_task !== undefined && response.switch_to_task !== null) {
+        console.log(`🔄 切换到任务 ${response.switch_to_task}: ${response.switch_to_section}`);
+        
+        // 更新当前任务索引
+        setCurrentTaskIdx(response.switch_to_task);
+        
+        // 更新任务列表状态（将目标任务标记为进行中）
+        setTaskList(prevTasks => {
+          return prevTasks.map((task, idx) => {
+            if (idx === response.switch_to_task) {
+              return { ...task, status: 'in_progress' as const };
+            }
+            return task;
+          });
+        });
+      }
 
       // 如果进入确认状态，不需要额外操作，用户可以点击确认按钮
 
@@ -247,9 +271,9 @@ export default function ChatPanel(props: {
   const handleConfirm = async () => {
     if (!sessionId || isExecuting) return;
 
-    // 检查最后一条消息是否处于确认状态
+    // 检查最后一条消息是否有草稿可确认（改为检查 draft 而非 isConfirming）
     const lastMsg = messages[messages.length - 1];
-    if (!lastMsg?.isConfirming) {
+    if (!lastMsg?.draft) {
       setMessages(prev => [...prev, {
         role: "assistant",
         content: "⚠️ 当前没有待确认的内容，请先完成对话。"
@@ -286,6 +310,9 @@ export default function ChatPanel(props: {
               setResumeData(content.resume);
             }
             
+            // 记录当前完成的任务信息（在更新状态前获取）
+            const completedTask = taskList[currentTaskIdx];
+            
             // 更新任务状态为已完成（使用函数式更新避免闭包陈旧值问题）
             setTaskList(prevTasks => {
               const updatedTasks = prevTasks.map((task, idx) => 
@@ -296,9 +323,12 @@ export default function ChatPanel(props: {
               return updatedTasks;
             });
             
+            // 添加完成消息，带有"返回修改"按钮
             setMessages(prev => [...prev, {
               role: "assistant",
-              content: content?.message || "修改已完成！"
+              content: content?.message || "修改已完成！",
+              showBacktrackButton: true,
+              completedTaskSection: completedTask?.section
             }]);
 
             // 检查是否还有下一个任务
@@ -361,6 +391,45 @@ export default function ChatPanel(props: {
     }
   };
 
+  // 处理回溯到已完成任务
+  const handleBacktrack = async (targetSection?: string) => {
+    if (!sessionId || isLoading || isExecuting) return;
+
+    setIsLoading(true);
+    
+    try {
+      const result = await backtrackTask(sessionId, targetSection);
+      
+      if (result.success && result.task) {
+        // 更新当前任务索引
+        setCurrentTaskIdx(result.task_idx);
+        
+        // 更新任务状态
+        setTaskList(prevTasks => 
+          prevTasks.map((task, idx) => 
+            idx === result.task_idx 
+              ? { ...task, status: 'in_progress' as const }
+              : task
+          )
+        );
+        
+        // 添加回溯成功消息
+        setMessages(prev => [...prev, {
+          role: "assistant",
+          content: `好的，让我们回到「${result.task?.section}」重新调整。请告诉我你想怎么修改？`
+        }]);
+      }
+    } catch (error) {
+      console.error('回溯失败:', error);
+      setMessages(prev => [...prev, {
+        role: "assistant",
+        content: `回溯失败: ${error instanceof Error ? error.message : '未知错误'}`
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className="flex flex-col h-full bg-white relative">
@@ -413,7 +482,16 @@ export default function ChatPanel(props: {
                       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 px-4 py-3">
                         <div className="flex items-center gap-2">
                           <span className="text-lg">📝</span>
-                          <span className="text-sm font-semibold text-blue-900">优化草稿预览</span>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-blue-900">优化草稿预览</span>
+                            {m.locationInfo && (
+                              <span className="text-xs text-blue-600 mt-1">
+                                应用位置：{m.locationInfo.section}
+                                {m.locationInfo.item_title && ` - ${m.locationInfo.item_title}`}
+                                {m.locationInfo.sub_section && ` · ${m.locationInfo.sub_section}`}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       {/* 内容区 */}
@@ -440,6 +518,21 @@ export default function ChatPanel(props: {
                       >
                         <XCircle className="w-4 h-4" />
                         跳过
+                      </button>
+                    </div>
+                  )}
+
+                  {/* 返回修改按钮 - 在任务完成消息后显示 */}
+                  {m.showBacktrackButton && !isLoading && !isExecuting && (
+                    <div className="mt-3">
+                      <button
+                        onClick={() => handleBacktrack(m.completedTaskSection)}
+                        className="px-3 py-1.5 text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-md transition-colors flex items-center gap-1.5 border border-blue-200"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        </svg>
+                        返回修改此任务
                       </button>
                     </div>
                   )}
@@ -494,22 +587,22 @@ export default function ChatPanel(props: {
         >
           <textarea
             ref={inputRef}
-            placeholder={needsConfirmation ? "等待确认..." : "输入你的回答或要求..."}
+            placeholder={hasDraft ? "有修改意见？继续输入，或点击上方按钮确认/跳过..." : "输入你的回答或要求..."}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
             className="flex-1 border-none focus:ring-0 focus:outline-none text-base px-4 py-3 bg-transparent resize-none min-h-[48px] max-h-[200px] overflow-y-auto leading-relaxed"
-            disabled={isLoading || isExecuting || needsConfirmation}
+            disabled={isLoading || isExecuting}
           />
           <button 
             type="submit"
             className={`p-3 rounded-xl transition-all flex-shrink-0 ${
-              input.trim() && !isLoading && !isExecuting && !needsConfirmation
+              input.trim() && !isLoading && !isExecuting
                 ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg" 
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
-            disabled={isLoading || isExecuting || !input.trim() || needsConfirmation}
+            disabled={isLoading || isExecuting || !input.trim()}
           >
             {isLoading || isExecuting ? (
               <Loader2 className="w-5 h-5 animate-spin" />

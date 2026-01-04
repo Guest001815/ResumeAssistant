@@ -129,6 +129,9 @@ class AgentDecision(BaseModel):
     reply_to_user: str = Field(..., description="Response to the user.")
     draft_content: Optional[str] = Field(None, description="Optimized content. REQUIRED if next_action is PROPOSE_DRAFT.")
     execution_doc: Optional[ExecutionDoc] = Field(None, description="Execution document. Generated when entering CONFIRMING state.")
+    # 智能任务回溯字段
+    intent: Optional[Literal["CONTINUE", "BACKTRACK"]] = Field(None, description="User intent: CONTINUE current task or BACKTRACK to a previous task.")
+    target_section: Optional[str] = Field(None, description="Target section name when intent is BACKTRACK.")
 
 
 class AgentSnapshot(BaseModel):

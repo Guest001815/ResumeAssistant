@@ -124,6 +124,7 @@ class GuideAgentAdapter(BaseAgent):
         
         包含：
         - skipped_tasks: 已跳过的任务名称列表
+        - completed_tasks: 已完成的任务名称列表（用于回溯识别）
         - progress: 进度信息
         - is_first_after_skip: 是否是跳过任务后的第一次对话
         """
@@ -133,8 +134,11 @@ class GuideAgentAdapter(BaseAgent):
         
         # 获取已跳过的任务名称
         skipped_tasks = []
+        # 获取已完成的任务名称（用于智能回溯）
+        completed_tasks = []
         if state.plan:
             skipped_tasks = [t.section for t in state.plan.tasks if t.status == TaskStatus.SKIPPED]
+            completed_tasks = [t.section for t in state.plan.tasks if t.status == TaskStatus.COMPLETED]
         
         # 判断是否是跳过后的首次对话
         # 条件：当前任务索引 > 0，且上一个任务状态是 SKIPPED，且当前 Agent 没有对话历史
@@ -150,6 +154,7 @@ class GuideAgentAdapter(BaseAgent):
         
         return {
             "skipped_tasks": skipped_tasks,
+            "completed_tasks": completed_tasks,
             "progress": progress,
             "is_first_after_skip": is_first_after_skip
         }
@@ -203,7 +208,23 @@ class GuideAgentAdapter(BaseAgent):
                 ))
             
             # 判断动作
-            if self._agent.is_finished():
+            # 首先检查是否是回溯意图
+            if decision.intent == "BACKTRACK" and decision.target_section:
+                action = AgentAction.SWITCH_TASK
+                next_agent = None
+                content = decision.reply_to_user
+                target_section = decision.target_section
+                logger.info(f"🔄 GuideAgent检测到回溯意图，目标板块: {target_section}")
+                
+                return AgentOutput(
+                    thought=decision.thought,
+                    action=action,
+                    content=content,
+                    next_agent=next_agent,
+                    messages=messages,
+                    target_section=target_section
+                )
+            elif self._agent.is_finished():
                 # 用户已确认，准备移交 Editor
                 action = AgentAction.HANDOFF
                 next_agent = "editor"
