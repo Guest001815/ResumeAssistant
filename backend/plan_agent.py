@@ -67,7 +67,7 @@ goal 应该灵活，给后续的 Guide Agent 留出根据用户实际情况调�
 这是一个【学习/课程/真实】项目，优化重点应放在**项目难点**和**个人收获**上：
 
 1. **难点挖掘方向：**
-   - 引导用户回忆：实现过程中遇到的技术挑战（如{根据技术栈推测}）
+   - 引导用户回忆：实现过程中遇到的技术挑战（如{{根据技术栈推测}}）
    - 或者：第一次接触XX技术时的学习过程
 
 2. **收获挖掘方向：**
@@ -76,17 +76,17 @@ goal 应该灵活，给后续的 Guide Agent 留出根据用户实际情况调�
    - 问题解决能力、工程实践能力的提升
 
 3. **引导策略：**
-   - 如果用户说'不知道/没有'，根据项目类型【{项目类型}】和技术栈【{技术栈}】，
+   - 如果用户说'不知道/没有'，根据项目类型【{{项目类型}}】和技术栈【{{技术栈}}】，
      主动推测可能的难点并提供选项引导
    - 强调'从不懂到懂的过程'也是收获
 ```
 
 **示例：**
 ```json
-{
+{{
   "diagnosis": "描述仅列举了实现的功能，缺少项目难点和个人收获的展示。对于学习项目，面试官更关注'你遇到了什么技术挑战、如何解决、学到了什么'，而非业务数据",
   "goal": "挖掘项目难点（如首次使用Vue3/SpringBoot遇到的技术挑战、前后端联调问题、环境配置等）和技术收获（掌握的新技术、理解的原理、提升的能力），如用户表示'不知道'，根据在线考试系统的特点和Vue+SpringBoot技术栈，主动推测常见难点（跨域配置、权限管理、接口设计）并提供选项引导"
-}
+}}
 ```
 
 ## 针对真实项目的增强策略
@@ -95,18 +95,18 @@ goal 应该灵活，给后续的 Guide Agent 留出根据用户实际情况调�
 
 **真实项目goal模板：**
 ```
-针对【{目标岗位}】岗位优化：
-1. 补充量化数据（{具体指标建议}）
+针对【{{目标岗位}}】岗位优化：
+1. 补充量化数据（{{具体指标建议}}）
 2. 突出技术难点（如遇到的性能瓶颈、技术选型挑战等）
 3. 强调个人成长（对XX技术的深入理解、积累的经验）
 ```
 
 **示例：**
 ```json
-{
+{{
   "diagnosis": "描述了基本功能，但缺少技术深度展示。对于后端开发岗位，需要体现架构设计能力和问题解决能力",
   "goal": "针对【后端开发】岗位优化：1) 补充性能数据（QPS、响应时间等）；2) 突出技术难点（如高并发优化、分布式事务处理等）；3) 强调技术成长（深入掌握的技术、积累的架构经验）"
-}
+}}
 ```
 
 # Strategy Selection Rules（策略选择规则）
@@ -197,14 +197,20 @@ Original Resume:
             {"role": "user", "content": user_prompt}
         ]
 
+        # 使用流式响应避免长时间阻塞
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             response_format={"type": "json_object"},
-            stream=False
+            stream=True  # 改为流式模式
         )
         
-        content = response.choices[0].message.content
+        # 收集流式响应的所有 chunk
+        content = ""
+        for chunk in response:
+            if chunk.choices and chunk.choices[0].delta.content:
+                content += chunk.choices[0].delta.content
+        
         return TaskList.model_validate_json(content)
 
     def generate_plan_with_progress(self, user_intent: str, resume: Resume):
@@ -235,13 +241,14 @@ Original Resume:
         
         # 模拟进度阶段
         # (最大等待时间秒, 进度%, 消息)
+        # 注意：复杂简历可能需要60-90秒，调整时间分配以匹配
         progress_steps = [
-            (1, 5, "正在准备分析..."),
-            (3, 15, "AI正在读取简历内容..."),
-            (6, 35, "AI正在深度分析简历和职位匹配度..."),
-            (10, 55, "AI正在识别优化机会..."),
-            (15, 75, "正在生成优化方案..."),
-            (20, 90, "正在验证和整理..."),
+            (2, 5, "正在准备分析..."),
+            (5, 15, "AI正在读取简历内容..."),
+            (15, 35, "AI正在深度分析简历和职位匹配度..."),
+            (30, 55, "AI正在识别优化机会..."),
+            (50, 75, "正在生成优化方案..."),
+            (70, 90, "正在验证和整理..."),
         ]
         
         start_time = time.time()
@@ -263,8 +270,8 @@ Original Resume:
             if not thread.is_alive():
                 break
         
-        # 等待线程完成（最多30秒）
-        thread.join(timeout=30)
+        # 等待线程完成（最多90秒，复杂简历需要更长时间）
+        thread.join(timeout=90)
         
         # 返回结果
         if result["error"]:

@@ -1,0 +1,145 @@
+{
+  "metadata": {
+    "id": "ac9c916e51f984b8",
+    "name": "陈仲然",
+    "label": "",
+    "created_at": "2026-01-07T18:03:52.894895",
+    "updated_at": "2026-01-08T11:23:18.497425"
+  },
+  "resume": {
+    "basics": {
+      "name": "陈仲然",
+      "label": null,
+      "email": "chenzhongran2024@163.com",
+      "phone": "15817531757",
+      "links": []
+    },
+    "sections": [
+      {
+        "id": "education",
+        "title": "教育经历",
+        "type": "generic",
+        "items": [
+          {
+            "id": "edu1",
+            "title": "中国农业大学 - 计算机技术 硕士",
+            "subtitle": null,
+            "date": "2025.09 - 至今",
+            "description": "• 中国农业大学硕士二等学业奖学金（推免奖学金）"
+          },
+          {
+            "id": "edu2",
+            "title": "河南工业大学-软件工程",
+            "subtitle": null,
+            "date": "2021.09 - 2025.06",
+            "description": "• GPA：3.89 /5.0 综合排名：5/209（前2.4%）\n• 个人荣誉：国家奖学金（全专业1人）、河南省三好学生（全专业2人）、被校公众号报道4次\n• 英语六级：506"
+          }
+        ]
+      },
+      {
+        "id": "projects",
+        "title": "项目经历",
+        "type": "generic",
+        "items": [
+          {
+            "id": "proj1",
+            "title": "基于无人机图像的大蒜长势评估系统的设计与实现",
+            "subtitle": null,
+            "date": "2024.12 - 2025.05",
+            "description": "• 项目背景与任务：针对传统农业巡检效率低、多光谱设备成本高的问题，自主研发一套基于消费级无人机RGB图像的长势监测系统，负责从算法选型、模型构建到Web平台开发的全流程。\n• 动作与技能：\n  - 算法优化：使用 Python 与 OpenCV 实现了 ExG-Otsu 植被分割算法，通过对比实验有效解决了大蒜叶片细长重叠及地膜反光带来的噪点问题。\n  - 架构开发：基于 Flask 框架与 MVC 模式搭建 Web 后端，集成 NumPy 实现像素级覆盖度计算，并将长势等级定量化。\n  - 数据处理：利用 Pix4Dmapper 配合 SfM 算法处理 150+ 张航拍影像，生成高精度正射影像图（DOM）并建立标准图像数据集。\n• 项目成果：获校优秀毕业设计"
+          },
+          {
+            "id": "proj2",
+            "title": "基于SpringBoot的高校宿舍管理系统",
+            "subtitle": null,
+            "date": "2024.06",
+            "description": "• 内容和工作：开发了基于SpringBoot的高校宿舍管理系统，使用了Layui、Thymeleaf、MyBatis和MySQL等技术，系统功能涵盖学生和宿舍信息管理、宿舍分配、日常管理、离返校管理和综合查询等\n• 成果：项目成功完成并通过测试，各功能模块运行稳定，获得导师肯定，分数达95分"
+          },
+          {
+            "id": "proj3",
+            "title": "基于思科模拟器的公司局域网的规划与设计",
+            "subtitle": null,
+            "date": "2024.04",
+            "description": "• 内容和工作：基于思科模拟器，为小型公司局域网设计了完整的网络架构，并通过VLAN、IP地址分配、DHCP和ACL实现资源共享、部门间通信和访问控制。配置了DNS、Web和FTP服务器，确保内网的高效性。\n• 成果：成功搭建了一个包含多部门划分、具备隔离能力的局域网系统，设计得到了导师的认可，分数达95分"
+          }
+        ]
+      },
+      {
+        "id": "research",
+        "title": "研究经历",
+        "type": "generic",
+        "items": [
+          {
+            "id": "res1",
+            "title": "全国大学生数据统计与分析竞赛-团队赛-核心成员",
+            "subtitle": null,
+            "date": "2024.06",
+            "description": "• 课题内容：基于熵权平衡的XGBoost的电信银行卡诈骗预测模型构建\n• 主要工作：使用Pandas进行数据预处理和数据的分类处理，使用matplotlib、Seaborn进行论文绘图，撰写论文、修改格式\n• 成果：获得全国二等奖"
+          },
+          {
+            "id": "res2",
+            "title": "全国大学生数学建模竞赛-核心成员",
+            "subtitle": null,
+            "date": "2022.09",
+            "description": "• 课题内容：基于主成分分析、聚类分析、判断分析的古代玻璃成分分析与鉴别的研究\n• 主要工作：负责数据预处理，论文部分绘图、撰写、格式修改以及编程工作\n• 成果：获得河南省二等奖"
+          }
+        ]
+      },
+      {
+        "id": "awards",
+        "title": "竞赛奖项",
+        "type": "generic",
+        "items": [
+          {
+            "id": "award1",
+            "title": "全国大学生数据统计与分析竞赛-个人赛 全国二等奖",
+            "subtitle": null,
+            "date": "2024.06",
+            "description": null
+          },
+          {
+            "id": "award2",
+            "title": "全国大学生英语竞赛 全国二等奖",
+            "subtitle": null,
+            "date": "2023.06",
+            "description": null
+          },
+          {
+            "id": "award3",
+            "title": "蓝桥杯程序设计赛 省级二等奖",
+            "subtitle": null,
+            "date": "2022.05",
+            "description": null
+          },
+          {
+            "id": "award4",
+            "title": "全国大学生软件测试大赛 省级三等奖",
+            "subtitle": null,
+            "date": "2023.11",
+            "description": null
+          }
+        ]
+      },
+      {
+        "id": "internships",
+        "title": "实践经历",
+        "type": "generic",
+        "items": [
+          {
+            "id": "intern1",
+            "title": "参加科大讯飞深度学习专项训练营（专业仅1人），学习并接触相关知识和多个深度学习项目",
+            "subtitle": null,
+            "date": null,
+            "description": "在院学生会和校级志愿社团任负责人，多次成功举办活动\n多次参加志愿者活动，5次获校优秀志愿者称号"
+          }
+        ]
+      },
+      {
+        "id": "summary",
+        "title": "个人总结",
+        "type": "text",
+        "content": "具有良好的沟通能力和团队合作意识，具有较强的抗压能力"
+      }
+    ]
+  }
+}
