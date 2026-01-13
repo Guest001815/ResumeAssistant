@@ -3,7 +3,7 @@ import logging
 
 from typing import Optional, Dict, Any, Generator
 from openai import OpenAI
-from model import Resume, ExecutionDoc, ExperienceSection, GenericSection, GenericItem
+from model import Resume, ExecutionDoc, ExperienceSection, GenericSection, GenericItem, TextSection
 # 引入刚才写的框架
 from tool_framework import ToolRegistry, UpdateBasicsTool, AddExperienceTool, UpdateExperienceTool, DeleteExperienceTool, UpsertGenericTool, AskHumanTool, StopTool, ThinkTool, ToolContext
 
@@ -84,7 +84,7 @@ class EditorAgent:
         """
         混合模式执行：根据ExecutionDoc执行简历变更。
         
-        - 简单操作（update_basics, update_experience, update_generic）：直接调用工具，不需要LLM
+        - 简单操作（update_basics, update_experience, update_generic, update_text）：直接调用工具，不需要LLM
         - 复杂操作（add_item等）：走LLM推理
         
         Args:
@@ -118,6 +118,11 @@ class EditorAgent:
             
         elif doc.operation == "update_generic":
             result = self._execute_update_generic(doc)
+            yield {"role": "assistant", "type": "tool", "content": result}
+            yield {"role": "assistant", "type": "data", "content": self.resume.model_dump()}
+            
+        elif doc.operation == "update_text":
+            result = self._execute_update_text(doc)
             yield {"role": "assistant", "type": "tool", "content": result}
             yield {"role": "assistant", "type": "data", "content": self.resume.model_dump()}
             
@@ -309,6 +314,52 @@ class EditorAgent:
         
         # 如果没有可更新的内容，抛出异常
         error_msg = f"❌ 通用板块 '{section_title}' 没有可更新的内容"
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    def _execute_update_text(self, doc: ExecutionDoc) -> str:
+        """直接执行纯文本板块更新（如个人总结、自我介绍等）"""
+        changes = doc.changes
+        section_title = doc.section_title
+        
+        logger.info(f"🔧 开始执行文本板块更新: section='{section_title}'")
+        
+        # 查找目标 TextSection（精确匹配）
+        target_section = None
+        for section in self.resume.sections:
+            if isinstance(section, TextSection) and section.title == section_title:
+                target_section = section
+                logger.info(f"✓ 找到目标TextSection（精确匹配）: {section.title}")
+                break
+        
+        # 如果精确匹配失败，尝试模糊匹配
+        if not target_section:
+            logger.warning(f"⚠️ 精确匹配失败，尝试模糊匹配...")
+            main_title = section_title.split(" - ")[0].strip()
+            for section in self.resume.sections:
+                if isinstance(section, TextSection) and (section.title == main_title or main_title in section.title):
+                    target_section = section
+                    logger.info(f"✓ 找到目标TextSection（模糊匹配）: {section.title}")
+                    break
+        
+        # 如果还是找不到，抛出异常
+        if not target_section:
+            error_msg = f"❌ 未找到文本板块: {section_title}"
+            logger.error(error_msg)
+            logger.error(f"当前简历的sections: {[s.title for s in self.resume.sections]}")
+            raise ValueError(error_msg)
+        
+        # 更新文本内容
+        new_content = changes.get("content", "")
+        if new_content:
+            old_content_preview = target_section.content[:50] + "..." if len(target_section.content) > 50 else target_section.content
+            target_section.content = new_content
+            logger.info(f"✅ 文本板块已更新: '{section_title}'")
+            logger.info(f"   旧内容预览: {old_content_preview}")
+            logger.info(f"   新内容预览: {new_content[:50]}...")
+            return f"✅ 文本板块已更新: {section_title}"
+        
+        error_msg = f"❌ 文本板块 '{section_title}' 没有可更新的内容"
         logger.error(error_msg)
         raise ValueError(error_msg)
 

@@ -112,7 +112,7 @@ class ExecutionDoc(BaseModel):
     task_id: int = Field(..., description="关联的Task ID")
     section_title: str = Field(..., description="目标section的标题")
     item_id: Optional[str] = Field(None, description="目标item的id（如果修改具体条目）")
-    operation: Literal["update_basics", "update_experience", "update_generic", "add_item"] = Field(
+    operation: Literal["update_basics", "update_experience", "update_generic", "update_text", "add_item"] = Field(
         ..., description="操作类型"
     )
     changes: Dict[str, Any] = Field(..., description="具体变更内容，键值对形式")

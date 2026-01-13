@@ -1432,6 +1432,8 @@ E. 学会了如何阅读技术文档和源码
             operation = "update_basics"
         elif "经历" in section_lower or "experience" in section_lower or "实习" in section_lower or "工作" in section_lower:
             operation = "update_experience"
+        elif "总结" in section_lower or "介绍" in section_lower or "简介" in section_lower or "自评" in section_lower:
+            operation = "update_text"
         else:
             operation = "update_generic"
         
