@@ -17,6 +17,7 @@ import {
 } from "../api/workflow";
 import MarkdownRenderer from "./MarkdownRenderer";
 import TypingIndicator from "./TypingIndicator";
+import { sessionManager } from "../utils/sessionManager";
 
 type Msg = { 
   role: "assistant" | "user"; 
@@ -126,8 +127,14 @@ export default function ChatPanel(props: {
     setIsLoading(true);
     try {
       // 1. 创建会话
-      const sid = await createSession(resumeData);
+      const { session_id: sid, resume_id } = await createSession(resumeData);
       setSessionId(sid);
+      
+      // 将会话ID和简历ID添加到本地列表（用于隐私隔离）
+      sessionManager.addMySessionId(sid);
+      if (resume_id) {
+        sessionManager.addMyResumeId(resume_id);
+      }
 
       setMessages(prev => [...prev, {
         role: "assistant",

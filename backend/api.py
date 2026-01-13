@@ -135,6 +135,7 @@ class CreateSessionRequest(BaseModel):
 class CreateSessionResponse(BaseModel):
     session_id: str
     message: str
+    resume_id: Optional[str] = None  # 简历ID（用于前端隔离）
 
 
 class PlanRequest(BaseModel):
@@ -286,9 +287,18 @@ async def create_session(req: CreateSessionRequest):
     # 保存到磁盘
     workflow_manager.save_with_metadata(state, metadata)
     
+    # 保存简历到独立存储（用于前端隔离）
+    resume_id = None
+    try:
+        resume_id = resume_storage.save_resume(req.resume)
+        logger.info(f"简历已保存: {resume_id}")
+    except Exception as e:
+        logger.warning(f"保存简历失败（不影响会话创建）: {e}")
+    
     return CreateSessionResponse(
         session_id=state.session_id,
-        message="会话创建成功"
+        message="会话创建成功",
+        resume_id=resume_id
     )
 
 

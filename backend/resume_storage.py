@@ -8,7 +8,7 @@ backend/storage/resumes/
   └── ...
 """
 import json
-import hashlib
+import uuid
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 import logging
@@ -85,51 +85,67 @@ class ResumeStorage:
         self.storage_path.mkdir(parents=True, exist_ok=True)
         logger.info(f"简历存储目录: {self.storage_path}")
     
-    def _generate_resume_id(self, name: str) -> str:
-        """
-        根据姓名生成简历ID（MD5哈希）
-        同名简历会有相同的ID，实现自动去重/更新
-        """
-        return hashlib.md5(name.encode('utf-8')).hexdigest()[:16]
+    def _generate_resume_id(self) -> str:
+        """生成随机唯一的简历ID（UUID）"""
+        return uuid.uuid4().hex[:16]
     
     def _get_resume_file(self, resume_id: str) -> Path:
         """获取简历文件路径"""
         return self.storage_path / f"{resume_id}.json"
     
+    def _get_next_display_name(self, base_name: str) -> str:
+        """
+        获取下一个可用的显示名（同名自动加序号）
+        
+        规则：
+        - 第一个同名简历不加序号：陈仲然
+        - 后续同名简历加序号：陈仲然(1)、陈仲然(2)...
+        
+        Args:
+            base_name: 原始简历姓名
+        
+        Returns:
+            带序号的显示名（如果需要）
+        """
+        existing = self.list_resumes()
+        existing_names = [r.metadata.name for r in existing]
+        
+        # 如果不存在同名，直接返回原名
+        if base_name not in existing_names:
+            return base_name
+        
+        # 找到下一个可用序号
+        seq = 1
+        while f"{base_name}({seq})" in existing_names:
+            seq += 1
+        return f"{base_name}({seq})"
+    
     def save_resume(self, resume: Resume) -> str:
         """
-        保存简历（自动去重，同名更新）
+        保存简历
         
         Args:
             resume: Resume对象
         
         Returns:
-            简历ID
+            简历ID（随机生成的UUID）
         """
         try:
-            name = resume.basics.name or "未命名"
-            resume_id = self._generate_resume_id(name)
+            base_name = resume.basics.name or "未命名"
+            # 获取带序号的显示名（同名自动加序号）
+            display_name = self._get_next_display_name(base_name)
+            resume_id = self._generate_resume_id()
             resume_file = self._get_resume_file(resume_id)
             
             now = datetime.now().isoformat()
-            
-            # 检查是否已存在，保留创建时间
             created_at = now
-            if resume_file.exists():
-                try:
-                    with open(resume_file, "r", encoding="utf-8") as f:
-                        existing = json.load(f)
-                    created_at = existing.get("metadata", {}).get("created_at", now)
-                    logger.info(f"更新已存在的简历: {name} (ID: {resume_id})")
-                except Exception:
-                    pass
-            else:
-                logger.info(f"创建新简历: {name} (ID: {resume_id})")
             
-            # 创建元数据
+            logger.info(f"创建新简历: {display_name} (ID: {resume_id})")
+            
+            # 创建元数据（使用带序号的显示名）
             metadata = ResumeMetadata(
                 id=resume_id,
-                name=name,
+                name=display_name,
                 label=resume.basics.label or "",
                 created_at=created_at,
                 updated_at=now,
@@ -236,19 +252,6 @@ class ResumeStorage:
     def resume_exists(self, resume_id: str) -> bool:
         """检查简历是否存在"""
         return self._get_resume_file(resume_id).exists()
-    
-    def get_resume_by_name(self, name: str) -> Optional[StoredResume]:
-        """
-        根据姓名获取简历
-        
-        Args:
-            name: 简历姓名
-        
-        Returns:
-            StoredResume对象，不存在则返回None
-        """
-        resume_id = self._generate_resume_id(name)
-        return self.get_resume(resume_id)
 
 
 # 全局简历存储管理器实例

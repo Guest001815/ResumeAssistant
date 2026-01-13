@@ -175,8 +175,8 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       return;
     }
 
-    // 历史简历模式
-    if (inputMode === 'history' && selectedResume) {
+    // 使用历史简历（无论哪种模式，只要选择了历史简历且没有上传新文件）
+    if (selectedResume && !file) {
       onStart(selectedResume, jd, null);
       return;
     }
@@ -443,6 +443,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                         <ResumeSelector
                           resumes={historyResumes}
                           selectedResume={selectedResume}
+                          selectedResumeId={selectedResumeId || undefined}
                           onSelect={(resume, resumeId) => {
                             setSelectedResume(resume);
                             setSelectedResumeId(resumeId);
@@ -495,6 +496,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
                         <ResumeSelector
                           resumes={historyResumes}
                           selectedResume={selectedResume || historyResumes[0].resume}
+                          selectedResumeId={selectedResumeId || historyResumes[0]?.id}
                           onSelect={(resume, resumeId) => {
                             setSelectedResume(resume);
                             setSelectedResumeId(resumeId);

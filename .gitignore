@@ -1,0 +1,17 @@
+﻿web/node_modules/
+backend/__pycache__/
+backend/__pycache__/
+# 构建产物
+web/dist/
+
+# 存储数据
+backend/storage/sessions/
+backend/storage/resumes/
+
+# 环境变量
+.env
+backend/.env
+
+# 系统文件
+.DS_Store
+Thumbs.db

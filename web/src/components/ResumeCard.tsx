@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, CheckCircle, Clock } from 'lucide-react';
+import { User, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Resume } from '../api/workflow';
 
@@ -60,17 +60,6 @@ export function ResumeCard({
           )}
         </div>
         
-        {/* 选中标记 */}
-        {isSelected && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="flex-shrink-0"
-          >
-            <CheckCircle className="w-6 h-6 text-blue-500" />
-          </motion.div>
-        )}
       </div>
     </motion.div>
   );

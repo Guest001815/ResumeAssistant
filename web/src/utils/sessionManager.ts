@@ -2,7 +2,7 @@
  * Session Manager: 会话管理器
  * 
  * 负责会话的创建、加载、保存、切换、删除
- * 实现混合存储策略：LocalStorage + 服务器
+ * 实现本地隔离策略：只显示当前浏览器创建的会话和简历
  */
 
 import { Resume, Task } from "../api/workflow";
@@ -48,10 +48,68 @@ export interface LocalSession extends Session {
 
 class SessionManager {
   private STORAGE_KEYS = {
-    sessions: 'ra_sessions',
+    sessions: 'ra_sessions',           // 会话元数据缓存
     currentId: 'ra_current_session_id',
-    messages: 'ra_messages_' // 前缀，后面加session_id
+    messages: 'ra_messages_',          // 前缀，后面加session_id
+    mySessionIds: 'ra_my_session_ids', // 我创建的会话ID列表
+    myResumeIds: 'ra_my_resume_ids'    // 我创建的简历ID列表
   };
+
+  // ==================== 本地 ID 列表管理 ====================
+
+  /**
+   * 获取我的会话ID列表
+   */
+  private getMySessionIds(): string[] {
+    const stored = localStorage.getItem(this.STORAGE_KEYS.mySessionIds);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  /**
+   * 添加会话ID到我的列表
+   */
+  addMySessionId(sessionId: string): void {
+    const ids = this.getMySessionIds();
+    if (!ids.includes(sessionId)) {
+      ids.unshift(sessionId); // 新的放前面
+      localStorage.setItem(this.STORAGE_KEYS.mySessionIds, JSON.stringify(ids));
+    }
+  }
+
+  /**
+   * 从我的列表移除会话ID
+   */
+  private removeMySessionId(sessionId: string): void {
+    const ids = this.getMySessionIds().filter(id => id !== sessionId);
+    localStorage.setItem(this.STORAGE_KEYS.mySessionIds, JSON.stringify(ids));
+  }
+
+  /**
+   * 获取我的简历ID列表
+   */
+  private getMyResumeIds(): string[] {
+    const stored = localStorage.getItem(this.STORAGE_KEYS.myResumeIds);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  /**
+   * 添加简历ID到我的列表
+   */
+  addMyResumeId(resumeId: string): void {
+    const ids = this.getMyResumeIds();
+    if (!ids.includes(resumeId)) {
+      ids.unshift(resumeId); // 新的放前面
+      localStorage.setItem(this.STORAGE_KEYS.myResumeIds, JSON.stringify(ids));
+    }
+  }
+
+  /**
+   * 从我的列表移除简历ID
+   */
+  private removeMyResumeId(resumeId: string): void {
+    const ids = this.getMyResumeIds().filter(id => id !== resumeId);
+    localStorage.setItem(this.STORAGE_KEYS.myResumeIds, JSON.stringify(ids));
+  }
 
   /**
    * 获取当前会话ID
@@ -72,47 +130,58 @@ class SessionManager {
   }
 
   /**
-   * 获取所有会话元数据
-   * 优先从LocalStorage读取，降级到服务器
+   * 获取所有会话元数据（只返回我创建的会话）
    */
   async getSessions(): Promise<SessionMetadata[]> {
     try {
-      // 先尝试从LocalStorage读取
-      const cached = localStorage.getItem(this.STORAGE_KEYS.sessions);
-      if (cached) {
-        const sessions = JSON.parse(cached) as SessionMetadata[];
-        
-        // 异步同步服务器数据（不阻塞返回）
-        this.syncSessionsFromServer().catch(err => {
-          console.warn('同步服务器会话失败:', err);
-        });
-        
-        return sessions;
+      const mySessionIds = this.getMySessionIds();
+      
+      if (mySessionIds.length === 0) {
+        return [];
       }
 
-      // LocalStorage没有，从服务器加载
-      return await this.syncSessionsFromServer();
+      // 并行获取每个会话的元数据
+      const sessions: SessionMetadata[] = [];
+      
+      for (const sessionId of mySessionIds) {
+        try {
+          const response = await fetch(`${API_BASE}/sessions/${sessionId}`);
+          if (response.ok) {
+            const session = await response.json() as Session;
+            // 提取元数据
+            sessions.push({
+              id: session.id,
+              name: session.name,
+              resume_file_name: session.resume_file_name,
+              job_title: session.job_title,
+              job_company: session.job_company,
+              created_at: session.created_at,
+              updated_at: session.updated_at,
+              progress: session.progress,
+              status: session.status
+            });
+          } else if (response.status === 404) {
+            // 会话已被删除，从本地列表移除
+            this.removeMySessionId(sessionId);
+          }
+        } catch (err) {
+          console.warn(`获取会话 ${sessionId} 失败:`, err);
+        }
+      }
+
+      // 按更新时间倒序排列
+      sessions.sort((a, b) => 
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+
+      // 缓存到本地
+      localStorage.setItem(this.STORAGE_KEYS.sessions, JSON.stringify(sessions));
+      
+      return sessions;
     } catch (error) {
       console.error('获取会话列表失败:', error);
       return [];
     }
-  }
-
-  /**
-   * 从服务器同步会话列表
-   */
-  private async syncSessionsFromServer(): Promise<SessionMetadata[]> {
-    const response = await fetch(`${API_BASE}/sessions`);
-    if (!response.ok) {
-      throw new Error(`获取会话列表失败: ${response.status}`);
-    }
-
-    const sessions = await response.json() as SessionMetadata[];
-    
-    // 保存到LocalStorage
-    localStorage.setItem(this.STORAGE_KEYS.sessions, JSON.stringify(sessions));
-    
-    return sessions;
   }
 
   /**
@@ -162,7 +231,15 @@ class SessionManager {
       throw new Error(`创建会话失败: ${createResponse.status}`);
     }
 
-    const { session_id } = await createResponse.json();
+    const { session_id, resume_id } = await createResponse.json();
+
+    // 将新会话添加到我的列表
+    this.addMySessionId(session_id);
+    
+    // 如果返回了简历ID，也添加到我的简历列表
+    if (resume_id) {
+      this.addMyResumeId(resume_id);
+    }
 
     // 生成计划
     const planResponse = await fetch(`${API_BASE}/session/${session_id}/plan`, {
@@ -174,9 +251,6 @@ class SessionManager {
     if (!planResponse.ok) {
       throw new Error(`生成计划失败: ${planResponse.status}`);
     }
-
-    // 刷新会话列表缓存
-    await this.syncSessionsFromServer();
 
     return session_id;
   }
@@ -205,6 +279,9 @@ class SessionManager {
       throw new Error(`删除会话失败: ${response.status}`);
     }
 
+    // 从我的会话列表移除
+    this.removeMySessionId(sessionId);
+
     // 删除LocalStorage中的数据
     const messagesKey = this.STORAGE_KEYS.messages + sessionId;
     localStorage.removeItem(messagesKey);
@@ -213,9 +290,6 @@ class SessionManager {
     if (this.getCurrentSessionId() === sessionId) {
       this.setCurrentSessionId(null);
     }
-
-    // 刷新会话列表缓存
-    await this.syncSessionsFromServer();
   }
 
   /**
@@ -232,8 +306,13 @@ class SessionManager {
       throw new Error(`更新会话名称失败: ${response.status}`);
     }
 
-    // 刷新会话列表缓存
-    await this.syncSessionsFromServer();
+    // 更新本地缓存中的会话名称
+    const cached = localStorage.getItem(this.STORAGE_KEYS.sessions);
+    if (cached) {
+      const sessions = JSON.parse(cached) as SessionMetadata[];
+      const updated = sessions.map(s => s.id === sessionId ? { ...s, name } : s);
+      localStorage.setItem(this.STORAGE_KEYS.sessions, JSON.stringify(updated));
+    }
   }
 
   /**
@@ -246,10 +325,8 @@ class SessionManager {
       const messagesKey = this.STORAGE_KEYS.messages + sessionId;
       localStorage.setItem(messagesKey, JSON.stringify(messages));
 
-      // 异步刷新会话列表（不阻塞）
-      this.syncSessionsFromServer().catch(err => {
-        console.warn('同步会话列表失败:', err);
-      });
+      // 确保会话ID在我的列表中
+      this.addMySessionId(sessionId);
     } catch (error) {
       console.error('保存会话状态失败:', error);
     }
@@ -325,7 +402,7 @@ class SessionManager {
   }
 
   /**
-   * 获取所有独立存储的简历
+   * 获取我的简历列表（只返回我创建的简历）
    */
   async getStoredResumes(): Promise<Array<{
     id: string;
@@ -336,13 +413,50 @@ class SessionManager {
     updated_at: string;
   }>> {
     try {
-      const response = await fetch(`${API_BASE}/resumes`);
-
-      if (!response.ok) {
-        throw new Error(`获取简历列表失败: ${response.status}`);
+      const myResumeIds = this.getMyResumeIds();
+      
+      if (myResumeIds.length === 0) {
+        return [];
       }
 
-      return await response.json();
+      // 并行获取每个简历的数据
+      const resumes: Array<{
+        id: string;
+        resume: Resume;
+        name: string;
+        label: string;
+        created_at: string;
+        updated_at: string;
+      }> = [];
+
+      for (const resumeId of myResumeIds) {
+        try {
+          const response = await fetch(`${API_BASE}/resumes/${resumeId}`);
+          if (response.ok) {
+            const data = await response.json();
+            resumes.push({
+              id: resumeId,
+              resume: data.resume,
+              name: data.metadata?.name || data.resume?.basics?.name || '未命名',
+              label: data.metadata?.label || data.resume?.basics?.label || '',
+              created_at: data.metadata?.created_at || '',
+              updated_at: data.metadata?.updated_at || ''
+            });
+          } else if (response.status === 404) {
+            // 简历已被删除，从本地列表移除
+            this.removeMyResumeId(resumeId);
+          }
+        } catch (err) {
+          console.warn(`获取简历 ${resumeId} 失败:`, err);
+        }
+      }
+
+      // 按更新时间倒序排列
+      resumes.sort((a, b) => 
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+
+      return resumes;
     } catch (error) {
       console.error('获取简历列表失败:', error);
       return [];
@@ -361,6 +475,9 @@ class SessionManager {
       if (!response.ok) {
         throw new Error(`删除简历失败: ${response.status}`);
       }
+
+      // 从我的简历列表移除
+      this.removeMyResumeId(resumeId);
 
       return true;
     } catch (error) {

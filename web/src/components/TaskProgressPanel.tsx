@@ -30,7 +30,7 @@ export default function TaskProgressPanel({
   onSkip,
   onNext,
   isLoading = false,
-  collapsed: initialCollapsed = false,
+  collapsed: initialCollapsed = true, // 默认折叠状态
   onMenuClick,
   onHomeClick
 }: TaskProgressPanelProps) {
@@ -73,35 +73,29 @@ export default function TaskProgressPanel({
   const canSkip = currentTask && currentTask.status !== 'completed' && currentTask.status !== 'skipped';
   const canNext = currentTask && currentTask.status === 'completed' && currentTaskIdx < tasks.length - 1;
 
+  // 其他任务（排除当前任务）
+  const otherTasks = tasks.filter((_, idx) => idx !== currentTaskIdx);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-white border-b border-gray-200 shadow-sm"
     >
-      {/* Header - Always Visible */}
-      <div 
-        className="px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
-        onClick={() => setCollapsed(!collapsed)}
-      >
+      {/* Header - 进度条区域 */}
+      <div className="px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4 flex-1">
           {/* Navigation Icons */}
           <div className="hidden md:flex gap-1">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onMenuClick?.();
-              }}
+              onClick={() => onMenuClick?.()}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               title="会话列表"
             >
               <Menu className="w-5 h-5 text-gray-700" />
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onHomeClick?.();
-              }}
+              onClick={() => onHomeClick?.()}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               title="返回首页"
             >
@@ -127,25 +121,32 @@ export default function TaskProgressPanel({
               />
             </div>
           </div>
-
-          {/* Current Task Preview */}
-          {!collapsed && currentTask && (
-            <div className="hidden md:block text-xs text-gray-500 truncate max-w-md">
-              当前: {currentTask.section}
-            </div>
-          )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2">
-          {!collapsed && (
-            <>
+        {isLoading && (
+          <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+        )}
+      </div>
+
+      {/* 当前任务卡片 - 始终显示 */}
+      {currentTask && (
+        <div className="px-4 pb-3">
+          <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all ${getTaskStatusColor(currentTask, currentTaskIdx)}`}>
+            <div className="flex-shrink-0">
+              {getTaskIcon(currentTask, currentTaskIdx)}
+            </div>
+
+            <div className="flex-1 min-w-0 flex items-center gap-2">
+              <span className="text-sm font-semibold whitespace-nowrap">任务 {currentTask.id}</span>
+              <span className="text-xs text-gray-500 flex-shrink-0">·</span>
+              <span className="text-sm font-medium truncate">{currentTask.section}</span>
+            </div>
+
+            {/* 状态标签和操作按钮 */}
+            <div className="flex items-center gap-2 flex-shrink-0">
               {canSkip && (
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSkip?.();
-                  }}
+                  onClick={() => onSkip?.()}
                   disabled={isLoading}
                   className="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -154,34 +155,53 @@ export default function TaskProgressPanel({
               )}
               {canNext && (
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onNext?.();
-                  }}
+                  onClick={() => onNext?.()}
                   disabled={isLoading}
                   className="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   下一个
                 </button>
               )}
-            </>
-          )}
+              
+              {/* Status Badge */}
+              {currentTask.status === 'completed' && (
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                  已完成
+                </span>
+              )}
+              {currentTask.status === 'skipped' && (
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
+                  已跳过
+                </span>
+              )}
+              {currentTask.status !== 'completed' && currentTask.status !== 'skipped' && (
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium animate-pulse">
+                  进行中
+                </span>
+              )}
 
-          {isLoading && (
-            <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-          )}
-
-          {collapsed ? (
-            <ChevronDown className="w-5 h-5 text-gray-400" />
-          ) : (
-            <ChevronUp className="w-5 h-5 text-gray-400" />
-          )}
+              {/* 展开/折叠按钮 - 只有这个按钮可以触发展开/折叠 */}
+              {otherTasks.length > 0 && (
+                <button
+                  onClick={() => setCollapsed(!collapsed)}
+                  className="p-1.5 hover:bg-white/50 rounded-md transition-colors"
+                  title={collapsed ? "展开全部任务" : "收起任务列表"}
+                >
+                  {collapsed ? (
+                    <ChevronDown className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+                  ) : (
+                    <ChevronUp className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Task List - Collapsible */}
+      {/* 其他任务列表 - 可折叠 */}
       <AnimatePresence>
-        {!collapsed && (
+        {!collapsed && otherTasks.length > 0 && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -189,53 +209,43 @@ export default function TaskProgressPanel({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-3 space-y-2">
-              {tasks.map((task, idx) => (
-                <motion.div
-                  key={task.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${getTaskStatusColor(task, idx)}`}
-                >
-                  <div className="flex-shrink-0 mt-0.5">
-                    {getTaskIcon(task, idx)}
-                  </div>
+            <div className="px-4 pb-3 space-y-1.5">
+              {tasks.map((task, idx) => {
+                // 跳过当前任务，因为已经在上面显示了
+                if (idx === currentTaskIdx) return null;
+                
+                return (
+                  <motion.div
+                    key={task.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.03 }}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg border transition-all ${getTaskStatusColor(task, idx)}`}
+                  >
+                    <div className="flex-shrink-0">
+                      {getTaskIcon(task, idx)}
+                    </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex-1 min-w-0 flex items-center gap-2">
                       <span className="text-xs font-semibold">任务 {task.id}</span>
                       <span className="text-xs text-gray-500">·</span>
                       <span className="text-xs font-medium truncate">{task.section}</span>
                     </div>
-                    
-                    {idx === currentTaskIdx && (
-                      <div className="mt-1 space-y-1">
-                        <p className="text-xs text-gray-600 line-clamp-2">
-                          <span className="font-medium">目标:</span> {task.goal}
-                        </p>
-                      </div>
-                    )}
-                  </div>
 
-                  {/* Status Badge */}
-                  {task.status === 'completed' && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                      已完成
-                    </span>
-                  )}
-                  {task.status === 'skipped' && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
-                      已跳过
-                    </span>
-                  )}
-                  {idx === currentTaskIdx && task.status !== 'completed' && task.status !== 'skipped' && (
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium animate-pulse">
-                      进行中
-                    </span>
-                  )}
-                </motion.div>
-              ))}
+                    {/* Status Badge */}
+                    {task.status === 'completed' && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium flex-shrink-0">
+                        已完成
+                      </span>
+                    )}
+                    {task.status === 'skipped' && (
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium flex-shrink-0">
+                        已跳过
+                      </span>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -243,4 +253,3 @@ export default function TaskProgressPanel({
     </motion.div>
   );
 }
-

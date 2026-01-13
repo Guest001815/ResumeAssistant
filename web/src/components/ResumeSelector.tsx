@@ -16,6 +16,7 @@ export interface ResumeOption {
 interface ResumeSelectorProps {
   resumes: ResumeOption[];
   selectedResume: Resume;
+  selectedResumeId?: string;  // 新增：用于精确匹配选中的简历
   onSelect: (resume: Resume, resumeId: string) => void;
   onDelete?: (resumeId: string) => void;
   showDelete?: boolean;
@@ -47,7 +48,8 @@ function calculateTimeAgo(lastUsed: string): string {
 
 export function ResumeSelector({ 
   resumes, 
-  selectedResume, 
+  selectedResume,
+  selectedResumeId,
   onSelect, 
   onDelete,
   showDelete = false 
@@ -55,10 +57,10 @@ export function ResumeSelector({
   const [isExpanded, setIsExpanded] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   
-  // 找到当前选中的简历选项
-  const selectedOption = resumes.find(
-    r => r.resume.basics.name === selectedResume.basics.name
-  );
+  // 找到当前选中的简历选项（优先使用 ID 匹配，兼容旧逻辑）
+  const selectedOption = selectedResumeId 
+    ? resumes.find(r => r.id === selectedResumeId)
+    : resumes.find(r => r.resume.basics.name === selectedResume.basics.name);
 
   const handleDelete = async (e: React.MouseEvent, resumeId: string) => {
     e.stopPropagation();
@@ -131,7 +133,7 @@ export function ResumeSelector({
             className="space-y-2 overflow-hidden"
           >
             {resumes
-              .filter(r => r.resume.basics.name !== selectedResume.basics.name)
+              .filter(r => selectedResumeId ? r.id !== selectedResumeId : r.resume.basics.name !== selectedResume.basics.name)
               .map((option) => (
                 <div key={option.id} className="relative">
                   <ResumeCard

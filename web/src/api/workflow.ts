@@ -228,9 +228,17 @@ export async function parseResumeWithProgress(
 }
 
 /**
+ * 创建会话响应
+ */
+export interface CreateSessionResult {
+  session_id: string;
+  resume_id?: string;
+}
+
+/**
  * 创建会话
  */
-export async function createSession(resume: Resume): Promise<string> {
+export async function createSession(resume: Resume): Promise<CreateSessionResult> {
   const response = await fetch(`${API_BASE}/session/create`, {
     method: "POST",
     headers: {
@@ -244,7 +252,10 @@ export async function createSession(resume: Resume): Promise<string> {
   }
 
   const data = await response.json();
-  return data.session_id;
+  return {
+    session_id: data.session_id,
+    resume_id: data.resume_id
+  };
 }
 
 /**

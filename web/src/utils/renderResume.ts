@@ -57,7 +57,26 @@ function inlineMd(s: string): string {
 }
 
 /**
+ * 检测一行是否为 bullet point（支持前导空格）
+ * @param line 原始行文本
+ * @returns 是否为 bullet point
+ */
+function isBulletLine(line: string): boolean {
+  return /^\s*[-•·]\s*/.test(line);
+}
+
+/**
+ * 检测一行是否为数字列表项（支持前导空格）
+ * @param line 原始行文本
+ * @returns 是否为数字列表项
+ */
+function isNumberedLine(line: string): boolean {
+  return /^\s*\d+\.\s+/.test(line);
+}
+
+/**
  * 智能格式化文本：识别段落、列表、换行等层级结构
+ * 支持嵌套列表和缩进的子项
  * @param text 原始文本（可能包含 \n 换行符）
  * @returns 格式化后的 HTML 字符串
  */
@@ -72,31 +91,36 @@ function formatText(text: string): string {
     const trimmed = para.trim();
     if (!trimmed) continue;
     
-    const lines = trimmed.split('\n').map(l => l.trim()).filter(l => l);
+    // 保留原始行（不 trim），用于检测缩进
+    const rawLines = trimmed.split('\n').filter(l => l.trim());
     
-    // 检测是否为数字列表（如 "1. xxx", "2. xxx"）
-    const isNumberedList = lines.length > 1 && lines.every(line => /^\d+\.\s+/.test(line));
+    if (rawLines.length === 0) continue;
+    
+    // 检测是否为数字列表：第一行是数字列表项，或者大部分行是数字列表项
+    const numberedCount = rawLines.filter(isNumberedLine).length;
+    const isNumberedList = numberedCount > 0 && numberedCount >= rawLines.length * 0.5;
+    
     if (isNumberedList) {
-      const items = lines.map(line => {
-        const content = line.replace(/^\d+\.\s+/, '');
-        return `<li>${inlineMd(content)}</li>`;
-      }).join('');
+      const items = parseListItems(rawLines, 'numbered');
       formattedParagraphs.push(`<ol>${items}</ol>`);
       continue;
     }
     
-    // 检测是否为无序列表（如 "- xxx" 或 "• xxx"）
-    const isBulletList = lines.length > 1 && lines.every(line => /^[-•]\s+/.test(line));
+    // 检测是否为无序列表：第一行是 bullet，或者大部分行是 bullet
+    const bulletCount = rawLines.filter(isBulletLine).length;
+    const isBulletList = bulletCount > 0 && (
+      isBulletLine(rawLines[0]) || // 第一行是 bullet
+      bulletCount >= rawLines.length * 0.5 // 或者至少一半的行是 bullet
+    );
+    
     if (isBulletList) {
-      const items = lines.map(line => {
-        const content = line.replace(/^[-•]\s+/, '');
-        return `<li>${inlineMd(content)}</li>`;
-      }).join('');
+      const items = parseListItems(rawLines, 'bullet');
       formattedParagraphs.push(`<ul>${items}</ul>`);
       continue;
     }
     
     // 普通段落：单行或多行用 <br> 连接
+    const lines = rawLines.map(l => l.trim());
     if (lines.length === 1) {
       formattedParagraphs.push(`<p>${inlineMd(lines[0])}</p>`);
     } else {
@@ -106,6 +130,74 @@ function formatText(text: string): string {
   }
   
   return formattedParagraphs.join('');
+}
+
+/**
+ * 解析列表项，支持嵌套结构
+ * 将连续的缩进行合并到前一个列表项中
+ * @param lines 原始行数组
+ * @param type 列表类型
+ * @returns HTML 列表项字符串
+ */
+function parseListItems(lines: string[], type: 'bullet' | 'numbered'): string {
+  const result: string[] = [];
+  let currentItem: string[] = [];
+  
+  const isListLine = type === 'bullet' ? isBulletLine : isNumberedLine;
+  const stripPrefix = type === 'bullet' 
+    ? (s: string) => s.replace(/^\s*[-•·]\s*/, '')
+    : (s: string) => s.replace(/^\s*\d+\.\s+/, '');
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmedLine = line.trim();
+    
+    if (isListLine(line)) {
+      // 如果有之前累积的内容，先输出
+      if (currentItem.length > 0) {
+        result.push(formatListItem(currentItem));
+        currentItem = [];
+      }
+      // 开始新的列表项
+      currentItem.push(stripPrefix(trimmedLine));
+    } else {
+      // 非列表行：作为前一个列表项的延续内容
+      if (currentItem.length > 0) {
+        // 检测是否为子级 bullet（缩进的 - 开头）
+        if (/^\s+[-•·]\s*/.test(line)) {
+          // 子级列表项，保留并作为延续内容
+          currentItem.push(trimmedLine.replace(/^[-•·]\s*/, ''));
+        } else {
+          // 普通延续内容
+          currentItem.push(trimmedLine);
+        }
+      } else {
+        // 没有前一个列表项，单独作为一个项
+        currentItem.push(trimmedLine);
+      }
+    }
+  }
+  
+  // 处理最后一个列表项
+  if (currentItem.length > 0) {
+    result.push(formatListItem(currentItem));
+  }
+  
+  return result.join('');
+}
+
+/**
+ * 格式化单个列表项
+ * @param lines 列表项的内容行数组
+ * @returns HTML <li> 元素
+ */
+function formatListItem(lines: string[]): string {
+  if (lines.length === 1) {
+    return `<li>${inlineMd(lines[0])}</li>`;
+  }
+  // 多行内容用 <br> 连接
+  const content = lines.map(inlineMd).join('<br>');
+  return `<li>${content}</li>`;
 }
 
 export function renderResumeHtmlFromSchema(resume: Resume): string {

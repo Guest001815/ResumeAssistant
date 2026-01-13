@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, CheckCircle, Clock, Target } from 'lucide-react';
+import { Briefcase, Clock, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SessionMetadata } from '../utils/sessionManager';
 
@@ -45,7 +45,7 @@ export function SessionCard({
         </div>
         
         {/* 会话信息 */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 pr-8">
           {/* 公司·职位 */}
           <h3 className="text-base font-semibold text-gray-900 truncate">
             {session.job_company && session.job_title 
@@ -82,17 +82,6 @@ export function SessionCard({
           </div>
         </div>
         
-        {/* 选中标记 */}
-        {isSelected && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="flex-shrink-0"
-          >
-            <CheckCircle className="w-6 h-6 text-blue-500" />
-          </motion.div>
-        )}
       </div>
     </motion.div>
   );

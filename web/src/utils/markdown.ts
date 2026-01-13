@@ -374,12 +374,61 @@ function parseSection(section: any, content: string, generateItemId: () => strin
   // 如果解析到了items，返回对应类型的section
   if (items.length > 0) {
     if (section.type === "experience") {
-      return {
-        id: section.id,
-        title: section.title,
-        type: "experience",
-        items: items
-      };
+      // 验证所有 items 是否都有 organization 字段（ExperienceItem 必填）
+      const allHaveOrganization = items.every(item => 
+        item.organization !== undefined && item.organization !== null && item.organization !== ""
+      );
+      
+      if (allHaveOrganization) {
+        // 所有 items 都是有效的 ExperienceItem
+        return {
+          id: section.id,
+          title: section.title,
+          type: "experience",
+          items: items
+        };
+      } else {
+        // 存在缺少 organization 的 item，降级为 generic 类型
+        // 将所有 items 转换为 GenericItem 格式
+        const genericItems = items.map(item => {
+          if (item.organization !== undefined) {
+            // 这是一个 ExperienceItem，转换为 GenericItem
+            const combinedTitle = item.organization && item.title 
+              ? `${item.organization} - ${item.title}` 
+              : (item.organization || item.title || "");
+            const dateStr = item.date_start 
+              ? (item.date_end && item.date_end !== item.date_start 
+                  ? `${item.date_start} - ${item.date_end}` 
+                  : item.date_start)
+              : "";
+            return {
+              id: item.id,
+              title: combinedTitle,
+              date: dateStr,
+              subtitle: item.location || "",
+              description: Array.isArray(item.highlights) && item.highlights.length > 0
+                ? item.highlights.join("; ")
+                : ""
+            };
+          } else {
+            // 已经是 GenericItem 格式，保持不变
+            return {
+              id: item.id,
+              title: item.title || "",
+              date: item.date || "",
+              subtitle: item.subtitle || "",
+              description: item.description || ""
+            };
+          }
+        });
+        
+        return {
+          id: section.id,
+          title: section.title,
+          type: "generic",
+          items: genericItems
+        };
+      }
     } else if (section.type === "generic") {
       return {
         id: section.id,
