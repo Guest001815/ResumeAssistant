@@ -23,6 +23,8 @@
 """
 import json
 import logging
+import os
+from logging.handlers import RotatingFileHandler
 from typing import Dict, Optional
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
@@ -45,10 +47,33 @@ from datetime import datetime
 # 保留原有 EditorAgent 用于 /run 端点
 from editor_agent import EditorAgent
 
+# ==================== 日志配置 ====================
+# 创建 logs 目录
+LOG_DIR = os.path.join(os.path.dirname(__file__), "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
+# 日志格式
+LOG_FORMAT = "%(asctime)s %(levelname)s [%(name)s] %(filename)s:%(lineno)d - %(message)s"
+
+# 配置根日志器
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
+    format=LOG_FORMAT,
 )
+
+# 添加文件处理器（带日志轮转，单文件最大10MB，保留5个备份）
+file_handler = RotatingFileHandler(
+    os.path.join(LOG_DIR, "server.log"),
+    maxBytes=10*1024*1024,  # 10MB
+    backupCount=5,
+    encoding="utf-8"
+)
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
+
+# 将文件处理器添加到根日志器
+logging.getLogger().addHandler(file_handler)
+
 logger = logging.getLogger(__name__)
 
 # ==================== 初始化 ====================
